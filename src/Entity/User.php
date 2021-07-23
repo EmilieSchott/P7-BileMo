@@ -46,7 +46,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private $lastName;
 
     /**
-     * @ORM\Column(type="string", length=17, nullable=true)
+     * @ORM\Column(type="string", length=20, nullable=true)
      */
     private $phoneNumber;
 

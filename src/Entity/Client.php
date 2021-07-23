@@ -35,7 +35,7 @@ class Client
     private $SiretNumber;
 
     /**
-     * @ORM\Column(type="string", length=17, nullable=true)
+     * @ORM\Column(type="string", length=20, nullable=true)
      */
     private $phoneNumber;
 
