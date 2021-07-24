@@ -1,0 +1,31 @@
+App\Entity\Client:
+    client1:
+        companyName: Citron
+        address: <address()>
+        siretNumber: <fr_FR:siret()>
+        phoneNumber: <fr_FR:phoneNumber()>
+
+    client2:
+        companyName: P-Home
+        address: <address()>
+        siretNumber: <fr_FR:siret()>
+        phoneNumber: <fr_FR:phoneNumber()>
+
+    client3:
+        companyName: Flac
+        address: <address()>
+        siretNumber: <fr_FR:siret()>
+        phoneNumber: <fr_FR:phoneNumber()>
+
+    client4:
+        companyName: Dirty
+        address: <address()>
+        siretNumber: <fr_FR:siret()>
+        phoneNumber: <fr_FR:phoneNumber()>
+
+    client5:
+        companyName: Patissier
+        address: <address()>
+        siretNumber: <fr_FR:siret()>
+        phoneNumber: <fr_FR:phoneNumber()>
+      

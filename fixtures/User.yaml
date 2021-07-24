@@ -1,0 +1,91 @@
+App\Entity\User:
+    user1:
+        client: '@client1'
+        firstName: 'Emilie'
+        lastName: 'Schott'
+        roles: '[ROLE_ADMIN]'
+        email: 'emilie.schott@gmail.com'
+        phoneNumber: '<fr_FR:phoneNumber()>'
+        password: '\$2y\$13\$3QwwO05tzQoKze89wxzAc.1cplXg/cLfCn3l3ZEgIr7tjEtfG.vki'
+
+    user2:
+        client: '@client1'
+        firstName: '<firstName()>'
+        lastName: '<lastName()>'
+        roles: '[ROLE_USER]'
+        email: '<email()>'
+        phoneNumber: '<fr_FR:phoneNumber()>'
+        password: '\$2y\$13\$3QwwO05tzQoKze89wxzAc.1cplXg/cLfCn3l3ZEgIr7tjEtfG.vki'
+
+    user3:
+        client: '@client2'
+        firstName: '<firstName()>'
+        lastName: '<lastName()>'
+        roles: '[ROLE_ADMIN]'
+        email: '<email()>'
+        phoneNumber: '<fr_FR:phoneNumber()>'
+        password: '\$2y\$13\$3QwwO05tzQoKze89wxzAc.1cplXg/cLfCn3l3ZEgIr7tjEtfG.vki'
+
+    user4:
+        client: '@client2'
+        firstName: '<firstName()>'
+        lastName: '<lastName()>'
+        roles: '[ROLE_USER]'
+        email: '<email()>'
+        phoneNumber: '<fr_FR:phoneNumber()>'
+        password: '\$2y\$13\$3QwwO05tzQoKze89wxzAc.1cplXg/cLfCn3l3ZEgIr7tjEtfG.vki'
+
+    user5:
+        client: '@client3'
+        firstName: '<firstName()>'
+        lastName: '<lastName()>'
+        roles: '[ROLE_ADMIN]'
+        email: '<email()>'
+        phoneNumber: '<fr_FR:phoneNumber()>'
+        password: '\$2y\$13\$3QwwO05tzQoKze89wxzAc.1cplXg/cLfCn3l3ZEgIr7tjEtfG.vki'
+
+    user6:
+        client: '@client3'
+        firstName: '<firstName()>'
+        lastName: '<lastName()>'
+        roles: '[ROLE_USER]'
+        email: '<email()>'
+        phoneNumber: '<fr_FR:phoneNumber()>'
+        password: '\$2y\$13\$3QwwO05tzQoKze89wxzAc.1cplXg/cLfCn3l3ZEgIr7tjEtfG.vki'
+
+    user7:
+        client: '@client4'
+        firstName: '<firstName()>'
+        lastName: '<lastName()>'
+        roles: '[ROLE_ADMIN]'
+        email: '<email()>'
+        phoneNumber: '<fr_FR:phoneNumber()>'
+        password: '\$2y\$13\$3QwwO05tzQoKze89wxzAc.1cplXg/cLfCn3l3ZEgIr7tjEtfG.vki'
+
+    user8:
+        client: '@client4'
+        firstName: '<firstName()>'
+        lastName: '<lastName()>'
+        roles: '[ROLE_USER]'
+        email: '<email()>'
+        phoneNumber: '<fr_FR:phoneNumber()>'
+        password: '\$2y\$13\$3QwwO05tzQoKze89wxzAc.1cplXg/cLfCn3l3ZEgIr7tjEtfG.vki'
+
+    user9:
+        client: '@client5'
+        firstName: '<firstName()>'
+        lastName: '<lastName()>'
+        roles: '[ROLE_ADMIN]'
+        email: '<email()>'
+        phoneNumber: '<fr_FR:phoneNumber()>'
+        password: '\$2y\$13\$3QwwO05tzQoKze89wxzAc.1cplXg/cLfCn3l3ZEgIr7tjEtfG.vki'
+
+    user10:
+        client: '@client5'
+        firstName: '<firstName()>'
+        lastName: '<lastName()>'
+        roles: '[ROLE_USER]'
+        email: '<email()>'
+        phoneNumber: '<fr_FR:phoneNumber()>'
+        password: '\$2y\$13\$3QwwO05tzQoKze89wxzAc.1cplXg/cLfCn3l3ZEgIr7tjEtfG.vki'
+
