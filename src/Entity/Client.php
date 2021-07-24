@@ -40,7 +40,7 @@ class Client
     private $SiretNumber;
 
     /**
-     * @ORM\OneToMany(targetEntity=User::class, mappedBy="client", orphanRemoval=true)
+     * @ORM\OneToMany(targetEntity=User::class, mappedBy="client")
      */
     private $users;
 
