@@ -25,6 +25,11 @@ class Client
     private $companyName;
 
     /**
+     * @ORM\Column(type="string", length=20, nullable=true)
+     */
+    private $phoneNumber;
+
+    /**
      * @ORM\Column(type="string", length=255)
      */
     private $address;
@@ -33,11 +38,6 @@ class Client
      * @ORM\Column(type="string", length=45)
      */
     private $SiretNumber;
-
-    /**
-     * @ORM\Column(type="string", length=20, nullable=true)
-     */
-    private $phoneNumber;
 
     /**
      * @ORM\OneToMany(targetEntity=User::class, mappedBy="client", orphanRemoval=true)

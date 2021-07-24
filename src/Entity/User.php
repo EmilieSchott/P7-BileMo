@@ -20,22 +20,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=180, unique=true)
-     */
-    private $email;
-
-    /**
-     * @ORM\Column(type="json")
-     */
-    private $roles = [];
-
-    /**
-     * @var string The hashed password
-     * @ORM\Column(type="string")
-     */
-    private $password;
-
-    /**
      * @ORM\Column(type="string", length=25)
      */
     private $firstName;
@@ -46,15 +30,31 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private $lastName;
 
     /**
+     * @ORM\ManyToOne(targetEntity=Client::class, inversedBy="users")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $client;
+
+    /**
+     * @ORM\Column(type="json")
+     */
+    private $roles = [];
+
+    /**
      * @ORM\Column(type="string", length=20, nullable=true)
      */
     private $phoneNumber;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Client::class, inversedBy="users")
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\Column(type="string", length=180, unique=true)
      */
-    private $client;
+    private $email;
+
+    /**
+     * @var string The hashed password
+     * @ORM\Column(type="string")
+     */
+    private $password;
 
     public function getId(): ?int
     {
