@@ -2,14 +2,51 @@
 
 namespace App\Entity;
 
-use App\Repository\UserRepository;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
+use App\Repository\UserRepository;
+use ApiPlatform\Core\Annotation\ApiResource;
+use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 
 /**
  * @ORM\Entity(repositoryClass=UserRepository::class)
  */
+#[ApiResource(
+    collectionOperations : [
+        'get' => [
+            'normalization_context' => [
+                'groups' => [
+                    'read_User_collection',
+                ],
+            ],
+        ],
+        'post' => [
+            'denormalization_context' => [
+                'groups' => [
+                    'write_User_item',
+                ],
+            ],
+        ],
+    ],
+    itemOperations: [
+        'get' => [
+            'normalization_context' => [
+                'groups' => [
+                    'read_User_item',
+                ],
+            ],
+        ],
+        'delete',
+        'patch' => [
+            'denormalization_context' => [
+                'groups' => [
+                    'write_User_item',
+                ],
+            ],
+        ],
+    ],
+)]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     /**
@@ -17,42 +54,50 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
      */
+    #[Groups(['read_Client_item', 'read_User_collection'])]
     private $id;
 
     /**
      * @ORM\Column(type="string", length=25)
      */
+    #[Groups(['read_Client_item', 'read_User_collection', 'read_User_item', 'write_User_item'])]
     private $firstName;
 
     /**
      * @ORM\Column(type="string", length=45)
      */
+    #[Groups(['read_Client_item', 'read_User_collection', 'read_User_item', 'write_User_item'])]
     private $lastName;
 
     /**
      * @ORM\ManyToOne(targetEntity=Client::class, inversedBy="users")
      */
+    #[Groups(['read_User_collection','read_User_item', 'write_User_item'])]
     private $client;
 
     /**
      * @ORM\Column(type="json")
      */
+    #[Groups(['read_Client_item', 'read_User_collection', 'read_User_item', 'write_User_item'])]
     private $roles = [];
 
     /**
      * @ORM\Column(type="string", length=20, nullable=true)
      */
+    #[Groups(['read_User_item', 'write_User_item'])]
     private $phoneNumber;
 
     /**
      * @ORM\Column(type="string", length=180, unique=true)
      */
+    #[Groups(['read_User_item', 'write_User_item'])]
     private $email;
 
     /**
      * @var string The hashed password
      * @ORM\Column(type="string")
      */
+    #[Groups(['write_User_item'])]
     private $password;
 
     public function getId(): ?int
