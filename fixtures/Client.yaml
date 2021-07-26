@@ -1,31 +1,21 @@
 App\Entity\Client:
-    client1:
+    client (template):
+        address: <address()>
+        siretNumber: <fr_FR:siret()>
+        phoneNumber: <fr_FR:phoneNumber()>
+
+    client1 (extends client):
         companyName: Citron
-        address: <address()>
-        siretNumber: <fr_FR:siret()>
-        phoneNumber: <fr_FR:phoneNumber()>
 
-    client2:
+    client2 (extends client):
         companyName: P-Home
-        address: <address()>
-        siretNumber: <fr_FR:siret()>
-        phoneNumber: <fr_FR:phoneNumber()>
 
-    client3:
+    client3 (extends client):
         companyName: Flac
-        address: <address()>
-        siretNumber: <fr_FR:siret()>
-        phoneNumber: <fr_FR:phoneNumber()>
 
-    client4:
+    client4 (extends client):
         companyName: Dirty
-        address: <address()>
-        siretNumber: <fr_FR:siret()>
-        phoneNumber: <fr_FR:phoneNumber()>
 
-    client5:
+    client5 (extends client):
         companyName: Patissier
-        address: <address()>
-        siretNumber: <fr_FR:siret()>
-        phoneNumber: <fr_FR:phoneNumber()>
       

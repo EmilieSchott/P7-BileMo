@@ -1,101 +1,56 @@
 App\Entity\User:
-    user1:
+    user (template):
+        firstName: '<firstName()>'
+        lastName: '<lastName()>'
+        email: '<email()>'
+        phoneNumber: '<fr_FR:phoneNumber()>'
+        password: '\$2y\$13\$3QwwO05tzQoKze89wxzAc.1cplXg/cLfCn3l3ZEgIr7tjEtfG.vki'
+
+    user1 (extends user):
         firstName: 'Emilie'
         lastName: 'Schott'
         roles: '[ROLE_SUPER_ADMIN]'
         email: 'emilie.schott@gmail.com'
-        phoneNumber: '<fr_FR:phoneNumber()>'
-        password: '\$2y\$13\$3QwwO05tzQoKze89wxzAc.1cplXg/cLfCn3l3ZEgIr7tjEtfG.vki'
 
-    user2:
+    user2 (extends user):
         client: '@client1'
-        firstName: '<firstName()>'
-        lastName: '<lastName()>'
         roles: '[ROLE_ADMIN]'
-        email: '<email()>'
-        phoneNumber: '<fr_FR:phoneNumber()>'
-        password: '\$2y\$13\$3QwwO05tzQoKze89wxzAc.1cplXg/cLfCn3l3ZEgIr7tjEtfG.vki'
 
-    user3:
+    user3 (extends user):
         client: '@client1'
-        firstName: '<firstName()>'
-        lastName: '<lastName()>'
         roles: '[ROLE_USER]'
-        email: '<email()>'
-        phoneNumber: '<fr_FR:phoneNumber()>'
-        password: '\$2y\$13\$3QwwO05tzQoKze89wxzAc.1cplXg/cLfCn3l3ZEgIr7tjEtfG.vki'
 
-    user4:
+    user4 (extends user):
         client: '@client2'
-        firstName: '<firstName()>'
-        lastName: '<lastName()>'
         roles: '[ROLE_ADMIN]'
-        email: '<email()>'
-        phoneNumber: '<fr_FR:phoneNumber()>'
-        password: '\$2y\$13\$3QwwO05tzQoKze89wxzAc.1cplXg/cLfCn3l3ZEgIr7tjEtfG.vki'
 
-    user5:
+    user5 (extends user):
         client: '@client2'
-        firstName: '<firstName()>'
-        lastName: '<lastName()>'
         roles: '[ROLE_USER]'
-        email: '<email()>'
-        phoneNumber: '<fr_FR:phoneNumber()>'
-        password: '\$2y\$13\$3QwwO05tzQoKze89wxzAc.1cplXg/cLfCn3l3ZEgIr7tjEtfG.vki'
 
-    user6:
+    user6 (extends user):
         client: '@client3'
-        firstName: '<firstName()>'
-        lastName: '<lastName()>'
         roles: '[ROLE_ADMIN]'
-        email: '<email()>'
-        phoneNumber: '<fr_FR:phoneNumber()>'
-        password: '\$2y\$13\$3QwwO05tzQoKze89wxzAc.1cplXg/cLfCn3l3ZEgIr7tjEtfG.vki'
 
-    user7:
+    user7 (extends user):
         client: '@client3'
-        firstName: '<firstName()>'
-        lastName: '<lastName()>'
         roles: '[ROLE_USER]'
-        email: '<email()>'
-        phoneNumber: '<fr_FR:phoneNumber()>'
-        password: '\$2y\$13\$3QwwO05tzQoKze89wxzAc.1cplXg/cLfCn3l3ZEgIr7tjEtfG.vki'
 
-    user8:
+    user8 (extends user):
         client: '@client4'
-        firstName: '<firstName()>'
-        lastName: '<lastName()>'
         roles: '[ROLE_ADMIN]'
-        email: '<email()>'
-        phoneNumber: '<fr_FR:phoneNumber()>'
-        password: '\$2y\$13\$3QwwO05tzQoKze89wxzAc.1cplXg/cLfCn3l3ZEgIr7tjEtfG.vki'
 
-    user9:
+    user9 (extends user):
         client: '@client4'
-        firstName: '<firstName()>'
-        lastName: '<lastName()>'
         roles: '[ROLE_USER]'
-        email: '<email()>'
-        phoneNumber: '<fr_FR:phoneNumber()>'
-        password: '\$2y\$13\$3QwwO05tzQoKze89wxzAc.1cplXg/cLfCn3l3ZEgIr7tjEtfG.vki'
 
-    user10:
+    user10 (extends user):
         client: '@client5'
-        firstName: '<firstName()>'
-        lastName: '<lastName()>'
         roles: '[ROLE_ADMIN]'
-        email: '<email()>'
-        phoneNumber: '<fr_FR:phoneNumber()>'
-        password: '\$2y\$13\$3QwwO05tzQoKze89wxzAc.1cplXg/cLfCn3l3ZEgIr7tjEtfG.vki'
 
-    user11:
+    user11 (extends user):
         client: '@client5'
-        firstName: '<firstName()>'
-        lastName: '<lastName()>'
         roles: '[ROLE_USER]'
-        email: '<email()>'
-        phoneNumber: '<fr_FR:phoneNumber()>'
-        password: '\$2y\$13\$3QwwO05tzQoKze89wxzAc.1cplXg/cLfCn3l3ZEgIr7tjEtfG.vki'
 
 
 
