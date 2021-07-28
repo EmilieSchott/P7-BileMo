@@ -9,122 +9,122 @@ use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity(repositoryClass=ProductRepository::class)
+ * @ApiResource(
+ *     collectionOperations={
+ *         "get"={
+ *             "normalization_context"={
+ *                 "groups"={
+ *                     "read_Product_collection",
+ *                 },
+ *             },
+ *         },
+ *         "post"={
+ *             "denormalization_context"={
+ *                 "groups"={
+ *                     "write_Product_item",
+ *                 },
+ *             },
+ *         },
+ *     },
+ *     itemOperations={
+ *         "get"={
+ *             "normalization_context"={
+ *                 "groups"={
+ *                     "read_Product_item",
+ *                 },
+ *             },
+ *         },
+ *         "delete",
+ *         "patch"={
+ *             "denormalization_context"={
+ *                 "groups"={
+ *                     "write_Product_item",
+ *                 },
+ *             },
+ *         },
+ *     },
+ * )
  */
-#[ApiResource(
-    collectionOperations: [
-        'get' => [
-            'normalization_context' => [
-                'groups' => [
-                    'read_Product_collection',
-                ],
-            ],
-        ],
-        'post' => [
-            'denormalization_context' => [
-                'groups' => [
-                    'write_Product_item',
-                ],
-            ],
-        ],
-    ],
-    itemOperations: [
-        'get' => [
-            'normalization_context' => [
-                'groups' => [
-                    'read_Product_item',
-                ],
-            ],
-        ],
-        'delete',
-        'patch' => [
-            'denormalization_context' => [
-                'groups' => [
-                    'write_Product_item',
-                ],
-            ],
-        ],
-    ],
-)]
 class Product
 {
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
+     * @Groups({"read_Product_collection"})
      */
-    #[Groups(['read_Product_collection'])]
     private $id;
 
     /**
      * @ORM\Column(type="string", length=150)
+     * @Groups({"read_Product_collection", "read_Product_item", "write_Product_item"})
      */
-    #[Groups(['read_Product_collection', 'read_Product_item', 'write_Product_item'])]
     private $name;
 
     /**
      * @ORM\Column(type="string", length=150)
+     * @Groups({"read_Product_collection"})
      */
-    #[Groups(['read_Product_collection'])]
     private $slug;
 
     /**
      * @ORM\Column(type="string", length=45)
+     * @Groups({"read_Product_collection", "read_Product_item", "write_Product_item"})
      */
-    #[Groups(['read_Product_collection', 'read_Product_item', 'write_Product_item'])]
     private $brand;
 
     /**
      * @ORM\Column(type="string", length=15)
+     * @Groups({"read_Product_collection", "read_Product_item", "write_Product_item"})
      */
-    #[Groups(['read_Product_collection', 'read_Product_item', 'write_Product_item'])]
     private $price;
 
     /**
      * @ORM\Column(type="integer")
+     * @Groups({"read_Product_collection", "read_Product_item", "write_Product_item"})
      */
-    #[Groups(['read_Product_collection', 'read_Product_item', 'write_Product_item'])]
     private $stock;
 
     /**
      * @ORM\Column(type="text")
+     * @Groups({"read_Product_item", "write_Product_item"})
      */
-    #[Groups(['read_Product_item', 'write_Product_item'])]
     private $description;
 
     /**
      * @ORM\Column(type="text")
+     * @Groups({"read_Product_collection", "read_Product_item", "write_Product_item"})
      */
-    #[Groups(['read_Product_collection', 'read_Product_item', 'write_Product_item'])]
     private $imageUrl;
 
     /**
      * @ORM\Column(type="string", length=45)
+     * @Groups({"read_Product_item", "write_Product_item"})
      */
-    #[Groups(['read_Product_item', 'write_Product_item'])]
     private $operatingSystem;
 
     /**
      * @ORM\Column(type="string", length=15, nullable=true)
+     * @Groups({"read_Product_item", "write_Product_item"})
      */
-    #[Groups(['read_Product_item', 'write_Product_item'])]
     private $stockageCapacity;
 
     /**
      * @ORM\Column(type="string", length=15, nullable=true)
+     * @Groups({"read_Product_item", "write_Product_item"})
      */
-    #[Groups(['read_Product_item', 'write_Product_item'])]
     private $screenSize;
 
     /**
      * @ORM\Column(type="string", length=15, nullable=true)
+     * @Groups({"read_Product_item", "write_Product_item"})
      */
-    #[Groups(['read_Product_item', 'write_Product_item'])]
     private $photoResolution;
 
     /**
      * @ORM\Column(type="string", length=15, nullable=true)
+     * @Groups({"read_Product_item", "write_Product_item"})
      */
-    #[Groups(['read_Product_item', 'write_Product_item'])]
     private $weight;
 
     public function getId(): ?int
