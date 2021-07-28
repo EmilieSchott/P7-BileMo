@@ -1,89 +1,78 @@
 App\Entity\Product:
-    product (template):
-        price: <numberBetween(150, 650)>€
-        stock: <numberBetween(25, 150)>
-        photoResolution: '90%? <randomElement(["10.8MPx","12.2MPx","8MPx"])>'
-        weight: '90%? <randomElement(["220g","151g","208g","188g"])>'
-        stockageCapacity: '90%? <randomElement(["128Go","256Go"])>'
-        screenSize: '90%? <randomElement(["6,67 pouces","6,9 pouces","6 pouces","6,7 pouces"])>'
+  product (template):
+    price: <numberBetween(150, 650)>€
+    stock: <numberBetween(25, 150)>
+    photoResolution: '90%? <randomElement(["10.8MPx","12.2MPx","8MPx"])>'
+    weight: '90%? <randomElement(["220g","151g","208g","188g"])>'
+    stockageCapacity: '90%? <randomElement(["128Go","256Go"])>'
+    screenSize: '90%? <randomElement(["6,67 pouces","6,9 pouces","6 pouces","6,7 pouces"])>'
 
-    product1 (extends product):
-        name: Samsung Galaxy S20 Ultra
-        slug: samsung-galaxy-s20-ultra
-        brand: Samnsung
-        description: "Le fleuron coréen de ce début de décennie ! Quel que soit l'usage voulu par l'utilisateur, cet S20 Ultra fera l'affaire. À tel point, qu'il se permet même d'intégrer une puce 5G afin d'anticiper la nouvelle génération de réseau mobile."
-        imageUrl: https://dyw7ncnq1en5l.cloudfront.net/optim/product/55/55495/98df8726-galaxy-s20-ultra__w580.jpeg
-        operatingSystem: Android
+  product1 (extends product):
+    name: Samsung Galaxy S20 Ultra
+    brand: Samnsung
+    description: "Le fleuron coréen de ce début de décennie ! Quel que soit l'usage voulu par l'utilisateur, cet S20 Ultra fera l'affaire. À tel point, qu'il se permet même d'intégrer une puce 5G afin d'anticiper la nouvelle génération de réseau mobile."
+    imageUrl: https://dyw7ncnq1en5l.cloudfront.net/optim/product/55/55495/98df8726-galaxy-s20-ultra__w580.jpeg
+    operatingSystem: Android
 
-    product2 (extends product):
-        name: Google Pixel 5
-        slug: google-pixel-5
-        brand: Google
-        description: "Un très bon smartphone qui offre un parfait équilibre entre performances, endurance et prix. Contrairement à bien des concurrents, Google ne joue pas avec les superlatifs pompeux et se contente d'offrir ce qu'il faut, là où il faut."
-        imageUrl: https://dyw7ncnq1en5l.cloudfront.net/optim/product/56/56587/f5a12172-pixel-5__w580.jpeg
-        operatingSystem: Android
-    
-    product3 (extends product):
-        name: Xiaomi Mi 10
-        slug: xiaomi-mi-10
-        brand: Xiaomi
-        description: "Le fabricant chinois nous propose un mobile résolument haut de gamme."
-        imageUrl: https://dyw7ncnq1en5l.cloudfront.net/optim/product/55/55457/fb307c33-mi-10__w580.jpeg
-        operatingSystem: Android
+  product2 (extends product):
+    name: Google Pixel 5
+    brand: Google
+    description: "Un très bon smartphone qui offre un parfait équilibre entre performances, endurance et prix. Contrairement à bien des concurrents, Google ne joue pas avec les superlatifs pompeux et se contente d'offrir ce qu'il faut, là où il faut."
+    imageUrl: https://dyw7ncnq1en5l.cloudfront.net/optim/product/56/56587/f5a12172-pixel-5__w580.jpeg
+    operatingSystem: Android
 
-    product4 (extends product):
-        name: Motorola Edge
-        slug: motorola-edge
-        brand: Motorola
-        description: "Le Motorola Edge est un bon smartphone, bien exécuté, offrant un bon compromis entre performances et qualité des photos."
-        imageUrl: https://dyw7ncnq1en5l.cloudfront.net/optim/product/57/57629/1529fc91-edge_png__w580.jpg
-        operatingSystem: Android
+  product3 (extends product):
+    name: Xiaomi Mi 10
+    brand: Xiaomi
+    description: "Le fabricant chinois nous propose un mobile résolument haut de gamme."
+    imageUrl: https://dyw7ncnq1en5l.cloudfront.net/optim/product/55/55457/fb307c33-mi-10__w580.jpeg
+    operatingSystem: Android
 
-    product5 (extends product):
-        name: Poco F3
-        slug: poco-f3
-        brand: Poco
-        description: "Un écran, une autonomie et des performances au top."
-        imageUrl: https://dyw7ncnq1en5l.cloudfront.net/optim/product/62/62671/a4612d3d-f3__w580.jpeg
-        operatingSystem: Android
+  product4 (extends product):
+    name: Motorola Edge
+    brand: Motorola
+    description: "Le Motorola Edge est un bon smartphone, bien exécuté, offrant un bon compromis entre performances et qualité des photos."
+    imageUrl: https://dyw7ncnq1en5l.cloudfront.net/optim/product/57/57629/1529fc91-edge_png__w580.jpg
+    operatingSystem: Android
 
-    product6 (extends product):
-        name: Apple iPhone 12 Pro Max
-        slug: apple-iphone-12-pro-max
-        brand: Apple
-        description: "Avec son écran bien plus grand, une batterie bien plus dodue et des capacités photo supérieures, l'iPhone 12 Pro Max se pose comme le smartphone d'Apple ultime."
-        imageUrl: https://dyw7ncnq1en5l.cloudfront.net/optim/product/57/57525/a8f52448-iphone-12-pro-max__w580.jpeg
-        operatingSystem: iOS
+  product5 (extends product):
+    name: Poco F3
+    brand: Poco
+    description: "Un écran, une autonomie et des performances au top."
+    imageUrl: https://dyw7ncnq1en5l.cloudfront.net/optim/product/62/62671/a4612d3d-f3__w580.jpeg
+    operatingSystem: Android
 
-    product7 (extends product):
-        name: OnePlus Nord N10 5G
-        slug: oneplus-nord-n10-5g
-        brand: OnePlus
-        description: "Avec le Nord N10 5G, le constructeur chinois propose un mobile de qualité. Il possède une autonomie de marathonien, un écran bien calibré et la compatibilité 5G."
-        imageUrl: https://dyw7ncnq1en5l.cloudfront.net/optim/product/60/60635/4d10fead-nord-n10-5g__w580.jpeg
-        operatingSystem: Android
+  product6 (extends product):
+    name: Apple iPhone 12 Pro Max
+    brand: Apple
+    description: "Avec son écran bien plus grand, une batterie bien plus dodue et des capacités photo supérieures, l'iPhone 12 Pro Max se pose comme le smartphone d'Apple ultime."
+    imageUrl: https://dyw7ncnq1en5l.cloudfront.net/optim/product/57/57525/a8f52448-iphone-12-pro-max__w580.jpeg
+    operatingSystem: iOS
 
-    product8 (extends product):
-        name: Realme 6
-        slug: realme-6
-        brand: Realme
-        description: "Le Realme 6 dispose de nombreux atouts encore rares à ce niveau de prix (écran 90 Hz, charge 30 W)."
-        imageUrl: https://dyw7ncnq1en5l.cloudfront.net/optim/product/56/56779/b95fd891-6__w580.jpeg
-        operatingSystem: Android
+  product7 (extends product):
+    name: OnePlus Nord N10 5G
+    brand: OnePlus
+    description: "Avec le Nord N10 5G, le constructeur chinois propose un mobile de qualité. Il possède une autonomie de marathonien, un écran bien calibré et la compatibilité 5G."
+    imageUrl: https://dyw7ncnq1en5l.cloudfront.net/optim/product/60/60635/4d10fead-nord-n10-5g__w580.jpeg
+    operatingSystem: Android
 
-    product9 (extends product):
-        name: Apple iPhone 11 Pro Max
-        slug: apple-iphone-11-pro-max
-        brand: Apple
-        description: "Sans forcer, l'iPhone 11 Pro Max s'impose comme l'un des meilleurs smartphones du moment."
-        imageUrl: https://dyw7ncnq1en5l.cloudfront.net/optim/product/53/53567/97520e02-iphone-11-pro-max__w580.jpeg
-        operatingSystem: iOS
+  product8 (extends product):
+    name: Realme 6
+    brand: Realme
+    description: "Le Realme 6 dispose de nombreux atouts encore rares à ce niveau de prix (écran 90 Hz, charge 30 W)."
+    imageUrl: https://dyw7ncnq1en5l.cloudfront.net/optim/product/56/56779/b95fd891-6__w580.jpeg
+    operatingSystem: Android
 
-    product10 (extends product):
-        name: Samsung Galaxy S20+
-        slug: samsung-galaxy-s20+
-        brand: Samsung
-        description: "le Galaxy S20+ se positionne comme le parfait compromis entre un S20 compact et un S20 Ultra tout en démesure. Il s'agit donc d'un smartphone complet et agréable à utiliser, quel que soit l'usage demandé."
-        imageUrl: https://dyw7ncnq1en5l.cloudfront.net/optim/product/55/55489/f94dc30a-galaxy-s20__w580.jpeg
-        operatingSystem: Android
+  product9 (extends product):
+    name: Apple iPhone 11 Pro Max
+    brand: Apple
+    description: "Sans forcer, l'iPhone 11 Pro Max s'impose comme l'un des meilleurs smartphones du moment."
+    imageUrl: https://dyw7ncnq1en5l.cloudfront.net/optim/product/53/53567/97520e02-iphone-11-pro-max__w580.jpeg
+    operatingSystem: iOS
 
+  product10 (extends product):
+    name: Samsung Galaxy S20+
+    brand: Samsung
+    description: "le Galaxy S20+ se positionne comme le parfait compromis entre un S20 compact et un S20 Ultra tout en démesure. Il s'agit donc d'un smartphone complet et agréable à utiliser, quel que soit l'usage demandé."
+    imageUrl: https://dyw7ncnq1en5l.cloudfront.net/optim/product/55/55489/f94dc30a-galaxy-s20__w580.jpeg
+    operatingSystem: Android
