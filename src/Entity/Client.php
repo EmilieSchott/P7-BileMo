@@ -73,7 +73,7 @@ class Client
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups({"read_Client_item", "write_Client_item" })
+     * @Groups({"read_Client_item", "read_Client_collection", "write_Client_item" })
      */
     private $address;
 
