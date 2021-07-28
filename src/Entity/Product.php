@@ -64,7 +64,7 @@ class Product
     private $name;
 
     /**
-     * @ORM\Column(type="string", length=150)
+     * @ORM\Column(type="string", length=150, unique=true)
      * @Groups({"read_Product_collection"})
      */
     private $slug;
