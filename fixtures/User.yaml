@@ -1,0 +1,58 @@
+App\Entity\User:
+    user (template):
+        firstName: '<firstName()>'
+        lastName: '<lastName()>'
+        email: '<email()>'
+        phoneNumber: '<fr_FR:phoneNumber()>'
+        password: '\$2y\$13\$3QwwO05tzQoKze89wxzAc.1cplXg/cLfCn3l3ZEgIr7tjEtfG.vki'
+
+    user1 (extends user):
+        firstName: 'Emilie'
+        lastName: 'Schott'
+        roles: '[ROLE_SUPER_ADMIN]'
+        email: 'emilie.schott@gmail.com'
+
+    user2 (extends user):
+        client: '@client1'
+        roles: '[ROLE_ADMIN]'
+
+    user3 (extends user):
+        client: '@client1'
+        roles: '[ROLE_USER]'
+
+    user4 (extends user):
+        client: '@client2'
+        roles: '[ROLE_ADMIN]'
+
+    user5 (extends user):
+        client: '@client2'
+        roles: '[ROLE_USER]'
+
+    user6 (extends user):
+        client: '@client3'
+        roles: '[ROLE_ADMIN]'
+
+    user7 (extends user):
+        client: '@client3'
+        roles: '[ROLE_USER]'
+
+    user8 (extends user):
+        client: '@client4'
+        roles: '[ROLE_ADMIN]'
+
+    user9 (extends user):
+        client: '@client4'
+        roles: '[ROLE_USER]'
+
+    user10 (extends user):
+        client: '@client5'
+        roles: '[ROLE_ADMIN]'
+
+    user11 (extends user):
+        client: '@client5'
+        roles: '[ROLE_USER]'
+
+
+
+        
+
