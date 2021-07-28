@@ -15,6 +15,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
  *             "normalization_context"={
  *                 "groups"={
  *                     "read_Product_collection",
+ *                     "skip_null_values"=false
  *                 },
  *             },
  *         },
@@ -32,6 +33,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
  *                 "groups"={
  *                     "read_Product_item",
  *                 },
+ *                 "skip_null_values"=false
  *             },
  *         },
  *         "delete",

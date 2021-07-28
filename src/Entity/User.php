@@ -18,6 +18,7 @@ use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
  *                 "groups"={
  *                     "read_User_collection",
  *                 },
+ *                 "skip_null_values"=false
  *             },
  *         },
  *         "post"={
@@ -34,6 +35,7 @@ use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
  *                 "groups"={
  *                     "read_User_item",
  *                 },
+ *                 "skip_null_values"=false
  *             },
  *         },
  *         "delete",

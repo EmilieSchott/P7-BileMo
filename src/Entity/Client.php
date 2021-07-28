@@ -18,6 +18,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
  *                 "groups"={
  *                     "read_Client_collection",
  *                 },
+ *                 "skip_null_values"=false
  *             },
  *         },
  *         "post"={
@@ -34,6 +35,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
  *                 "groups"={
  *                     "read_Client_item",
  *                 },
+ *                 "skip_null_values"=false
  *             },
  *         },
  *         "delete",
