@@ -6,11 +6,18 @@ use Doctrine\ORM\Mapping as ORM;
 use App\Repository\UserRepository;
 use ApiPlatform\Core\Annotation\ApiResource;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 
 /**
  * @ORM\Entity(repositoryClass=UserRepository::class)
+ * @UniqueEntity(
+ *    fields="email",
+ *    message="Cette adresse mail est déjà utilisée.",
+ *    groups={"write_User_item"}
+ * )
  * @ApiResource(
  *     collectionOperations={
  *         "get"={
@@ -26,6 +33,10 @@ use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
  *                 "groups"={
  *                     "write_User_item",
  *                 },
+ *             },
+ *             "validation_groups"={
+ *                 "create_User_item",
+ *                 "write_User_item",
  *             },
  *         },
  *     },
@@ -45,12 +56,17 @@ use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
  *                     "write_User_item",
  *                 },
  *             },
+ *             "validation_groups"={
+ *                 "write_User_item",
+ *             },
  *         },
  *     },
  * )
  */
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
+    const ROLES = [['ROLE_USER'], ['ROLE_ADMIN'], ['ROLE_SUPER_ADMIN']];
+
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
@@ -62,12 +78,30 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @ORM\Column(type="string", length=25)
      * @Groups({"read_Client_item", "read_User_collection", "read_User_item", "write_User_item" })
+     * @Assert\NotBlank(
+     *     message = "Vous devez indiquer un prénom.",
+     *     groups={"create_User_item"}
+     * )
+     * @Assert\Length(
+     *     max = 25,
+     *     maxMessage = "Le prénom doit faire maximum {{ limit }} caractères.",
+     *     groups={"write_User_item"}
+     * )
      */
     private $firstName;
 
     /**
      * @ORM\Column(type="string", length=45)
      * @Groups({"read_Client_item", "read_User_collection", "read_User_item", "write_User_item" })
+     * @Assert\NotBlank(
+     *     message = "Vous devez indiquer un nom de famille.",
+     *     groups={"create_User_item"}
+     * )
+     * @Assert\Length(
+     *     max = 45,
+     *     maxMessage = "Le nom de famille doit faire maximum {{ limit }} caractères.",
+     *     groups={"write_User_item"}
+     * )
      */
     private $lastName;
 
@@ -80,18 +114,40 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @ORM\Column(type="json")
      * @Groups({"read_Client_item", "read_User_collection", "read_User_item", "write_User_item" })
+     * @Assert\Choice(
+     *     choices=User::ROLES,
+     *     groups={"write_User_item"},
+     *     message="{{ value }} n'est pas un choix valide. En fonction de votre propre niveau d'acréditation, vous pouvez choisir : {{ choices }}."
+     * )
      */
     private $roles = [];
 
     /**
      * @ORM\Column(type="string", length=20, nullable=true)
      * @Groups({"read_User_item", "write_User_item" })
+     * @Assert\Length(
+     *     max = 20,
+     *     maxMessage = "Le numéro de téléphone doit faire maximum {{ limit }} caractères.",
+     *     groups={"write_User_item"}
+     * )
      */
     private $phoneNumber;
 
     /**
      * @ORM\Column(type="string", length=180, unique=true)
      * @Groups({"read_User_item", "write_User_item" })
+     * @Assert\NotBlank(
+     *     message = "Vous devez indiquer un email.",
+     *     groups={"create_User_item"}
+     * )
+     * @Assert\Email(message = "L'email indiqué n'est pas valide.",
+     *     groups={"write_User_item"}
+     * )
+     * @Assert\Length(
+     *     max = 180,
+     *     maxMessage = "L'email doit faire maximum {{ limit }} caractères.",
+     *     groups={"write_User_item"}
+     * )
      */
     private $email;
 
@@ -99,6 +155,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      * @var string The hashed password
      * @ORM\Column(type="string")
      * @Groups({"write_User_item" })
+     * @Assert\NotBlank(
+     *     message = "Vous devez indiquer un mot de passe.",
+     *     groups={"create_User_item"}
+     * )
      */
     private $password;
 

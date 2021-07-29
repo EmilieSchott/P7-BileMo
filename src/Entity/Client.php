@@ -8,9 +8,16 @@ use Doctrine\Common\Collections\Collection;
 use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * @ORM\Entity(repositoryClass=ClientRepository::class)
+ * @UniqueEntity(
+ *     fields={"companyName", "address"},
+ *     message="Ce client existe déjà.",
+ *     groups={"write_Client_item"}
+ * )
  * @ApiResource(
  *     collectionOperations={
  *         "get"={
@@ -26,6 +33,10 @@ use Symfony\Component\Serializer\Annotation\Groups;
  *                 "groups"={
  *                     "write_Client_item",
  *                 },
+ *             },
+ *             "validation_groups"={
+ *                 "create_Client_item",
+ *                 "write_Client_item",
  *             },
  *         },
  *     },
@@ -45,6 +56,9 @@ use Symfony\Component\Serializer\Annotation\Groups;
  *                     "write_Client_item",
  *                 },
  *             },
+ *             "validation_groups"={
+ *                 "write_Client_item",
+ *             },
  *         },
  *     },
  * )
@@ -62,24 +76,56 @@ class Client
     /**
      * @ORM\Column(type="string", length=75)
      * @Groups({"read_Client_collection", "read_Client_item", "read_User_collection", "read_User_item", "write_Client_item" })
+     * @Assert\NotBlank(
+     *     message = "Vous devez indiquer le nom de l'entreprise.",
+     *     groups={"create_Client_item"}
+     * )
+     * @Assert\Length(
+     *     max = 75,
+     *     maxMessage = "Le nom de l'entreprise doit faire maximum {{ limit }} caractères.",
+     *     groups={"write_Client_item"}
+     * )
      */
     private $companyName;
 
     /**
      * @ORM\Column(type="string", length=20, nullable=true)
      * @Groups({"read_Client_item", "write_Client_item" })
+     * @Assert\Length(
+     *     max = 20,
+     *     maxMessage = "Le numéro de téléphone de l'entreprise doit faire maximum {{ limit }} caractères.",
+     *     groups={"write_Client_item"}
+     * )
      */
     private $phoneNumber;
 
     /**
      * @ORM\Column(type="string", length=255)
      * @Groups({"read_Client_item", "read_Client_collection", "write_Client_item" })
+     * @Assert\NotBlank(
+     *     message = "Vous devez indiquer une adresse pour l'entreprise.",
+     *     groups={"create_Client_item"}
+     * )
+     * @Assert\Length(
+     *     max = 255,
+     *     maxMessage = "L'adresse de l'entreprise doit faire maximum {{ limit }} caractères.",
+     *     groups={"write_Client_item"}
+     * )
      */
     private $address;
 
     /**
      * @ORM\Column(type="string", length=45)
      * @Groups({"read_Client_item", "write_Client_item" })
+     * @Assert\NotBlank(
+     *     message = "Vous devez indiquer le numéro SIRET de l'entreprise.",
+     *     groups={"create_Client_item"}
+     * )
+     * @Assert\Length(
+     *     max = 45,
+     *     maxMessage = "Le numéro SIRET de l'entreprise doit faire maximum {{ limit }} caractères.",
+     *     groups={"write_Client_item"}
+     * )
      */
     private $SiretNumber;
 
