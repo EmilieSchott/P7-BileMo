@@ -6,9 +6,16 @@ use Doctrine\ORM\Mapping as ORM;
 use App\Repository\ProductRepository;
 use ApiPlatform\Core\Annotation\ApiResource;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * @ORM\Entity(repositoryClass=ProductRepository::class)
+ * @UniqueEntity(
+ *     fields="name",
+ *     message="Ce produit existe déjà.",
+ *     groups={"write_Product_item"}
+ * )
  * @ApiResource(
  *     collectionOperations={
  *         "get"={
@@ -24,6 +31,10 @@ use Symfony\Component\Serializer\Annotation\Groups;
  *                 "groups"={
  *                     "write_Product_item",
  *                 },
+ *             },
+ *             "validation_groups"={
+ *                 "create_Product_item",
+ *                 "write_Product_item",
  *             },
  *         },
  *     },
@@ -43,6 +54,9 @@ use Symfony\Component\Serializer\Annotation\Groups;
  *                     "write_Product_item",
  *                 },
  *             },
+ *             "validation_groups"={
+ *                 "write_Product_item",
+ *             },
  *         },
  *     },
  * )
@@ -60,6 +74,15 @@ class Product
     /**
      * @ORM\Column(type="string", length=150)
      * @Groups({"read_Product_collection", "read_Product_item", "write_Product_item"})
+     * @Assert\NotBlank(
+     *     message = "Vous devez indiquer le nom du produit.",
+     *     groups={"create_Product_item"}
+     * )
+     * @Assert\Length(
+     *     max = 150,
+     *     maxMessage = "Le nom du produit doit faire maximum {{ limit }} caractères.",
+     *     groups={"write_Product_item"}
+     * )
      */
     private $name;
 
@@ -72,60 +95,128 @@ class Product
     /**
      * @ORM\Column(type="string", length=45)
      * @Groups({"read_Product_collection", "read_Product_item", "write_Product_item"})
+     * @Assert\NotBlank(
+     *     message = "Vous devez indiquer la marque du produit.",
+     *     groups={"create_Product_item"}
+     * )
+     * @Assert\Length(
+     *     max = 45,
+     *     maxMessage = "La marque du produit doit faire maximum {{ limit }} caractères.",
+     *     groups={"write_Product_item"}
+     * )
      */
     private $brand;
 
     /**
      * @ORM\Column(type="string", length=15)
      * @Groups({"read_Product_collection", "read_Product_item", "write_Product_item"})
+     * @Assert\NotBlank(
+     *     message = "Vous devez indiquer le prix du produit.",
+     *     groups={"create_Product_item"}
+     * )
+     * @Assert\Length(
+     *     max = 15,
+     *     maxMessage = "Le prix du produit doit faire maximum {{ limit }} caractères. (Indiquez la devise)",
+     *     groups={"write_Product_item"}
+     * )
      */
     private $price;
 
     /**
      * @ORM\Column(type="integer")
      * @Groups({"read_Product_collection", "read_Product_item", "write_Product_item"})
+     * @Assert\NotBlank(
+     *     message = "Vous devez indiquer un stock pour le produit.",
+     *     groups={"create_Product_item"}
+     * )
+     * @Assert\Length(
+     *     max = 11,
+     *     maxMessage = "Ls stock du produit doit faire maximum {{ limit }} chiffres.",
+     *     groups={"write_Product_item"}
+     * )
      */
     private $stock;
 
     /**
      * @ORM\Column(type="text")
      * @Groups({"read_Product_item", "write_Product_item"})
+     * @Assert\NotBlank(
+     *     message = "Vous devez indiquer une description pour le produit.",
+     *     groups={"create_Product_item"}
+     * )
      */
     private $description;
 
     /**
      * @ORM\Column(type="text")
      * @Groups({"read_Product_collection", "read_Product_item", "write_Product_item"})
+     * @Assert\NotBlank(
+     *     message = "Vous devez indiquer une URL pour récupérer l'image du produit.",
+     *     groups={"create_Product_item"}
+     * )
+     * @Assert\Url(
+     *     message = "L'Url spécifié n'est pas valide.",
+     *     groups={"write_Product_item"}
+     * )
      */
     private $imageUrl;
 
     /**
      * @ORM\Column(type="string", length=45)
      * @Groups({"read_Product_item", "write_Product_item"})
+     * @Assert\NotBlank(
+     *     message = "Vous devez indiquer le système d'exploitation du produit.",
+     *     groups={"create_Product_item"}
+     * )
+     * @Assert\Length(
+     *     max = 45,
+     *     maxMessage = "Le système d'exploitation du produit doit faire maximum {{ limit }} caractères.",
+     *     groups={"write_Product_item"}
+     * )
      */
     private $operatingSystem;
 
     /**
      * @ORM\Column(type="string", length=15, nullable=true)
      * @Groups({"read_Product_item", "write_Product_item"})
+     * @Assert\Length(
+     *     max = 15,
+     *     maxMessage = "La capacité de la mémoire du produit doit faire maximum {{ limit }} caractères. (Indiquez l'unité)",
+     *     groups={"write_Product_item"}
+     * )
      */
     private $stockageCapacity;
 
     /**
      * @ORM\Column(type="string", length=15, nullable=true)
      * @Groups({"read_Product_item", "write_Product_item"})
+     * @Assert\Length(
+     *     max = 15,
+     *     maxMessage = "La taille de l'écran du produit doit faire maximum {{ limit }} caractères. (Indiquez l'unité)",
+     *     groups={"write_Product_item"}
+     * )
      */
     private $screenSize;
 
     /**
      * @ORM\Column(type="string", length=15, nullable=true)
      * @Groups({"read_Product_item", "write_Product_item"})
+     * @Assert\Length(
+     *     max = 15,
+     *     maxMessage = "La résolution des photos prises par le produit doit faire maximum {{ limit }} caractères. (Indiquez l'unité)",
+     *     groups={"write_Product_item"}
+     * )
      */
     private $photoResolution;
 
     /**
      * @ORM\Column(type="string", length=15, nullable=true)
      * @Groups({"read_Product_item", "write_Product_item"})
+     * @Assert\Length(
+     *     max = 15,
+     *     maxMessage = "Le poids du produit doit faire maximum {{ limit }} caractères. (Indiquez l'unité)",
+     *     groups={"write_Product_item"}
+     * )
      */
     private $weight;
 
