@@ -61,6 +61,8 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  *             },
  *         },
  *     },
+ *     paginationMaximumItemsPerPage=30,
+ *     paginationClientItemsPerPage=true,
  * )
  */
 class Client

@@ -61,6 +61,8 @@ use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
  *             },
  *         },
  *     },
+ *     paginationMaximumItemsPerPage=30,
+ *     paginationClientItemsPerPage=true,
  * )
  */
 class User implements UserInterface, PasswordAuthenticatedUserInterface
