@@ -18,123 +18,131 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  *     message="Ce client existe déjà.",
  *     groups={"write_Client_item"}
  * )
- * @ApiResource(
- *     collectionOperations={
- *         "get"={
- *             "normalization_context"={
- *                 "groups"={
- *                     "read_Client_collection",
- *                 },
- *                 "skip_null_values"=false
- *             },
- *         },
- *         "post"={
- *             "denormalization_context"={
- *                 "groups"={
- *                     "write_Client_item",
- *                 },
- *             },
- *             "validation_groups"={
- *                 "create_Client_item",
- *                 "write_Client_item",
- *             },
- *         },
- *     },
- *     itemOperations={
- *         "get"={
- *             "normalization_context"={
- *                 "groups"={
- *                     "read_Client_item",
- *                 },
- *                 "skip_null_values"=false
- *             },
- *         },
- *         "delete",
- *         "patch"={
- *             "denormalization_context"={
- *                 "groups"={
- *                     "write_Client_item",
- *                 },
- *             },
- *             "validation_groups"={
- *                 "write_Client_item",
- *             },
- *         },
- *     },
- *     paginationMaximumItemsPerPage=30,
- *     paginationClientItemsPerPage=true,
- * )
  */
+#[ApiResource(
+    collectionOperations: [
+        'get' => [
+            'normalization_context' => [
+                'groups' => [
+                    'read_Client_collection',
+                ],
+                'skip_null_values' => false,
+            ],
+        ],
+        'post' => [
+            'denormalization_context' => [
+                'groups' => [
+                    'write_Client_item',
+                ],
+            ],
+            'validation_groups' => [
+                'write_Client_item',
+            ],
+        ],
+    ],
+    itemOperations: [
+        'get' => [
+            'normalization_context' => [
+                'groups' => [
+                    'read_Client_item',
+                ],
+                'skip_null_values' => false,
+            ],
+        ],
+        'delete',
+        'patch' => [
+            'denormalization_context' => [
+                'groups' => [
+                    'write_Client_item',
+                ],
+            ],
+            'validation_groups' => [
+                'write_Client_item',
+            ],
+        ],
+    ],
+    paginationMaximumItemsPerPage: 30,
+    paginationClientItemsPerPage: true,
+)]
 class Client
 {
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
-     * @Groups({"read_Client_collection", "read_User_collection", "read_User_item" })
      */
+    #[Groups(['read_Client_collection', 'read_User_collection', 'read_User_item'])]
     private $id;
 
     /**
      * @ORM\Column(type="string", length=75)
-     * @Groups({"read_Client_collection", "read_Client_item", "read_User_collection", "read_User_item", "write_Client_item" })
-     * @Assert\NotBlank(
-     *     message = "Vous devez indiquer le nom de l'entreprise.",
-     *     groups={"create_Client_item"}
-     * )
-     * @Assert\Length(
-     *     max = 75,
-     *     maxMessage = "Le nom de l'entreprise doit faire maximum {{ limit }} caractères.",
-     *     groups={"write_Client_item"}
-     * )
      */
+    #[
+        Groups(['read_Client_collection', 'read_Client_item', 'read_User_collection', 'read_User_item', 'write_Client_item']),
+        Assert\NotBlank(
+            message: "Vous devez indiquer le nom de l'entreprise.",
+            groups: ['write_Client_item']
+        ),
+        Assert\Length(
+            max: 75,
+            maxMessage: "Le nom de l'entreprise doit faire maximum {{ limit }} caractères.",
+            groups: ['write_Client_item']
+        )
+    ]
     private $companyName;
 
     /**
      * @ORM\Column(type="string", length=20, nullable=true)
-     * @Groups({"read_Client_item", "write_Client_item" })
-     * @Assert\Length(
-     *     max = 20,
-     *     maxMessage = "Le numéro de téléphone de l'entreprise doit faire maximum {{ limit }} caractères.",
-     *     groups={"write_Client_item"}
-     * )
      */
+    #[Groups(
+        ['read_Client_item', 'write_Client_item']
+    ),
+        Assert\Length(
+            max: 20,
+            maxMessage: "Le numéro de téléphone de l'entreprise doit faire maximum {{ limit }} caractères.",
+            groups: ['write_Client_item']
+        )
+    ]
     private $phoneNumber;
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups({"read_Client_item", "read_Client_collection", "write_Client_item" })
-     * @Assert\NotBlank(
-     *     message = "Vous devez indiquer une adresse pour l'entreprise.",
-     *     groups={"create_Client_item"}
-     * )
-     * @Assert\Length(
-     *     max = 255,
-     *     maxMessage = "L'adresse de l'entreprise doit faire maximum {{ limit }} caractères.",
-     *     groups={"write_Client_item"}
-     * )
      */
+    #[
+        Groups(['read_Client_item', 'read_Client_collection', 'write_Client_item']),
+        Assert\NotBlank(
+            message: "Vous devez indiquer une adresse pour l'entreprise.",
+            groups: ['write_Client_item']
+        ),
+        Assert\Length(
+            max: 255,
+            maxMessage: "L'adresse de l'entreprise doit faire maximum {{ limit }} caractères.",
+            groups: ['write_Client_item']
+        )
+    ]
     private $address;
 
     /**
      * @ORM\Column(type="string", length=45)
-     * @Groups({"read_Client_item", "write_Client_item" })
-     * @Assert\NotBlank(
-     *     message = "Vous devez indiquer le numéro SIRET de l'entreprise.",
-     *     groups={"create_Client_item"}
-     * )
-     * @Assert\Length(
-     *     max = 45,
-     *     maxMessage = "Le numéro SIRET de l'entreprise doit faire maximum {{ limit }} caractères.",
-     *     groups={"write_Client_item"}
-     * )
      */
+    #[
+        Groups(['read_Client_item', 'write_Client_item']),
+        Assert\NotBlank(
+            message: "Vous devez indiquer le numéro SIRET de l'entreprise.",
+            groups: ['write_Client_item']
+        ),
+        Assert\Length(
+            max: 45,
+            maxMessage: "Le numéro SIRET de l'entreprise doit faire maximum {{ limit }} caractères.",
+            groups: ['write_Client_item']
+        )
+    ]
     private $SiretNumber;
 
     /**
      * @ORM\OneToMany(targetEntity=User::class, mappedBy="client")
-     * @Groups({"read_Client_item"})
      */
+    #[Groups(['read_Client_item'])]
     private $users;
 
     public function __construct()

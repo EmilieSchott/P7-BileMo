@@ -18,53 +18,52 @@ use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
  *    message="Cette adresse mail est déjà utilisée.",
  *    groups={"write_User_item"}
  * )
- * @ApiResource(
- *     collectionOperations={
- *         "get"={
- *             "normalization_context"={
- *                 "groups"={
- *                     "read_User_collection",
- *                 },
- *                 "skip_null_values"=false
- *             },
- *         },
- *         "post"={
- *             "denormalization_context"={
- *                 "groups"={
- *                     "write_User_item",
- *                 },
- *             },
- *             "validation_groups"={
- *                 "create_User_item",
- *                 "write_User_item",
- *             },
- *         },
- *     },
- *     itemOperations={
- *         "get"={
- *             "normalization_context"={
- *                 "groups"={
- *                     "read_User_item",
- *                 },
- *                 "skip_null_values"=false
- *             },
- *         },
- *         "delete",
- *         "patch"={
- *             "denormalization_context"={
- *                 "groups"={
- *                     "write_User_item",
- *                 },
- *             },
- *             "validation_groups"={
- *                 "write_User_item",
- *             },
- *         },
- *     },
- *     paginationMaximumItemsPerPage=30,
- *     paginationClientItemsPerPage=true,
- * )
  */
+#[ApiResource(
+    collectionOperations : [
+        'get' => [
+            'normalization_context' => [
+                'groups' => [
+                    'read_User_collection',
+                ],
+                'skip_null_values' => false,
+            ],
+        ],
+        'post' => [
+            'denormalization_context' => [
+                'groups' => [
+                    'write_User_item',
+                ],
+            ],
+            'validation_groups' => [
+                'write_User_item',
+            ],
+        ],
+    ],
+    itemOperations: [
+        'get' => [
+            'normalization_context' => [
+                'groups' => [
+                    'read_User_item',
+                ],
+                'skip_null_values' => false,
+            ],
+        ],
+        'delete',
+        'patch' => [
+            'denormalization_context' => [
+                'groups' => [
+                    'write_User_item',
+                ],
+            ],
+            'validation_groups' => [
+                'write_User_item',
+            ],
+        ],
+    ],
+    paginationMaximumItemsPerPage: 30,
+    paginationClientItemsPerPage: true,
+)]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     const ROLES = [['ROLE_USER'], ['ROLE_ADMIN'], ['ROLE_SUPER_ADMIN']];
@@ -73,95 +72,108 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
-     * @Groups({"read_Client_item", "read_User_collection"})
      */
+    #[Groups(['read_Client_item', 'read_User_collection'])]
     private $id;
 
     /**
      * @ORM\Column(type="string", length=25)
-     * @Groups({"read_Client_item", "read_User_collection", "read_User_item", "write_User_item" })
-     * @Assert\NotBlank(
-     *     message = "Vous devez indiquer un prénom.",
-     *     groups={"create_User_item"}
-     * )
-     * @Assert\Length(
-     *     max = 25,
-     *     maxMessage = "Le prénom doit faire maximum {{ limit }} caractères.",
-     *     groups={"write_User_item"}
-     * )
      */
+    #[
+        Groups(['read_Client_item', 'read_User_collection', 'read_User_item', 'write_User_item']),
+        Assert\NotBlank(
+            message: 'Vous devez indiquer un prénom.',
+            groups: ['write_User_item']
+        ),
+        Assert\Length(
+            max: 25,
+            maxMessage: 'Le prénom doit faire maximum {{ limit }} caractères.',
+            groups: ['write_User_item']
+        )
+    ]
     private $firstName;
 
     /**
      * @ORM\Column(type="string", length=45)
-     * @Groups({"read_Client_item", "read_User_collection", "read_User_item", "write_User_item" })
-     * @Assert\NotBlank(
-     *     message = "Vous devez indiquer un nom de famille.",
-     *     groups={"create_User_item"}
-     * )
-     * @Assert\Length(
-     *     max = 45,
-     *     maxMessage = "Le nom de famille doit faire maximum {{ limit }} caractères.",
-     *     groups={"write_User_item"}
-     * )
      */
+    #[
+        Groups(['read_Client_item', 'read_User_collection', 'read_User_item', 'write_User_item']),
+        Assert\NotBlank(
+            message: 'Vous devez indiquer un nom de famille.',
+            groups: ['write_User_item']
+        ),
+        Assert\Length(
+            max: 45,
+            maxMessage: 'Le nom de famille doit faire maximum {{ limit }} caractères.',
+            groups: ['write_User_item']
+        )
+    ]
     private $lastName;
 
     /**
      * @ORM\ManyToOne(targetEntity=Client::class, inversedBy="users")
-     * @Groups({"read_User_collection","read_User_item", "write_User_item" })
      */
+    #[Groups(['read_User_collection', 'read_User_item', 'write_User_item'])]
     private $client;
 
     /**
      * @ORM\Column(type="json")
-     * @Groups({"read_Client_item", "read_User_collection", "read_User_item", "write_User_item" })
-     * @Assert\Choice(
-     *     choices=User::ROLES,
-     *     groups={"write_User_item"},
-     *     message="{{ value }} n'est pas un choix valide. En fonction de votre propre niveau d'acréditation, vous pouvez choisir : {{ choices }}."
-     * )
      */
+    #[
+        Groups(['read_Client_item', 'read_User_collection', 'read_User_item', 'write_User_item']),
+        Assert\Choice(
+            choices: User::ROLES,
+            groups: ['write_User_item'],
+            message: "{{ value }} n'est pas un choix valide. En fonction de votre propre niveau d'acréditation, vous pouvez attribuer : {{ choices }}."
+        )
+    ]
     private $roles = [];
 
     /**
      * @ORM\Column(type="string", length=20, nullable=true)
-     * @Groups({"read_User_item", "write_User_item" })
-     * @Assert\Length(
-     *     max = 20,
-     *     maxMessage = "Le numéro de téléphone doit faire maximum {{ limit }} caractères.",
-     *     groups={"write_User_item"}
-     * )
      */
+    #[
+        Groups(['read_User_item', 'write_User_item']),
+        Assert\Length(
+            max: 20,
+            maxMessage: 'Le numéro de téléphone doit faire maximum {{ limit }} caractères.',
+            groups: ['write_User_item']
+        )
+    ]
     private $phoneNumber;
 
     /**
      * @ORM\Column(type="string", length=180, unique=true)
-     * @Groups({"read_User_item", "write_User_item" })
-     * @Assert\NotBlank(
-     *     message = "Vous devez indiquer un email.",
-     *     groups={"create_User_item"}
-     * )
-     * @Assert\Email(message = "L'email indiqué n'est pas valide.",
-     *     groups={"write_User_item"}
-     * )
-     * @Assert\Length(
-     *     max = 180,
-     *     maxMessage = "L'email doit faire maximum {{ limit }} caractères.",
-     *     groups={"write_User_item"}
-     * )
      */
+    #[
+        Groups(['read_User_item', 'write_User_item']),
+        Assert\NotBlank(
+            message: 'Vous devez indiquer un email.',
+            groups: ['write_User_item']
+        ),
+        Assert\Email(
+            message: "L'email indiqué n'est pas valide.",
+            groups: ['write_User_item']
+        ),
+        Assert\Length(
+            max: 180,
+            maxMessage: "L'email doit faire maximum {{ limit }} caractères.",
+            groups: ['write_User_item']
+        )
+    ]
     private $email;
 
     /**
      * @var string The hashed password
      * @ORM\Column(type="string")
-     * @Groups({"write_User_item" })
-     * @Assert\NotBlank(
-     *     message = "Vous devez indiquer un mot de passe.",
-     *     groups={"create_User_item"}
-     * )
      */
+    #[
+        Groups(['write_User_item']),
+        Assert\NotBlank(
+            message: 'Vous devez indiquer un mot de passe.',
+            groups: ['write_User_item']
+        )
+    ]
     private $password;
 
     public function getId(): ?int
