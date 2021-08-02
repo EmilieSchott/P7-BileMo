@@ -24,3 +24,7 @@ services:
           event: "preUpdate",
           entity: 'App\Entity\Product',
         }
+
+  App\OpenApi\JwtDecorator:
+    decorates: "api_platform.openapi.factory"
+    autoconfigure: false
