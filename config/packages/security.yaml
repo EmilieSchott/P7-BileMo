@@ -9,10 +9,14 @@ security:
       entity:
         class: App\Entity\User
         property: email
+    jwt:
+      lexik_jwt:
+        class: App\Entity\User
 
   firewalls:
     login:
       pattern: ^/api/login
+      provider: app_user_provider
       stateless: true
       json_login:
         check_path: /api/login_check
@@ -21,6 +25,13 @@ security:
     api:
       pattern: ^/api
       stateless: true
-      jwt: ~
+      provider: jwt
+      guard:
+        authenticators:
+          - lexik_jwt_authentication.jwt_token_authenticator
 
   access_control:
+
+  role_hierarchy:
+    ROLE_ADMIN: ROLE_USER
+    ROLE_SUPER_ADMIN: ROLE_ADMIN

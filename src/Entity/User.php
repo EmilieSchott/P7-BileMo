@@ -4,11 +4,13 @@ namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\UserRepository;
+use App\Controller\MyDatasController;
 use ApiPlatform\Core\Annotation\ApiResource;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Lexik\Bundle\JWTAuthenticationBundle\Security\User\JWTUserInterface;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 
 /**
@@ -21,12 +23,55 @@ use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
  */
 #[ApiResource(
     collectionOperations : [
+        'my_datas' => [
+            'security' => 'is_granted("ROLE_USER")',
+            'pagination_enabled' => false,
+            'method' => 'GET',
+            'path' => '/users/my-datas',
+            'controller' => MyDatasController::class,
+            'read' => false,
+            'openapi_context' => [
+                'security' => [['bearerAuth' => []]],
+                'summary' => 'Get datas on the authenticated user',
+                'description' => 'Get id, email and roles for the authenticated user',
+                'responses' => [
+                    '200' => [
+                        'description' => 'Get datas registered in the JWT token used for authentication.',
+                        'content' => [
+                            'application/json' => [
+                                'schema' => [
+                                    'type' => 'object',
+                                    'properties' => [
+                                        'id' => ['type' => 'integer'],
+                                        'roles' => ['type' => 'array'],
+                                        'email' => ['type' => 'string'],
+                                        'userIdentifier' => ['type' => 'string'],
+                                        'username' => ['type' => 'string'],
+                                    ],
+                                ],
+                                'example' => [
+                                    'id' => 1,
+                                    'roles' => ['ROLE_USER'],
+                                    'email' => 'johndoe@example.com',
+                                    'userIdentifier' => 'johndoe@example.com',
+                                    'username' => 'johndoe@example.com',
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ],
         'get' => [
+            'security' => 'is_granted("ROLE_ADMIN")',
             'normalization_context' => [
                 'groups' => [
                     'read_User_collection',
                 ],
                 'skip_null_values' => false,
+            ],
+            'openapi_context' => [
+                'security' => [['bearerAuth' => []]],
             ],
         ],
         'post' => [
@@ -64,7 +109,7 @@ use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
     paginationMaximumItemsPerPage: 30,
     paginationClientItemsPerPage: true,
 )]
-class User implements UserInterface, PasswordAuthenticatedUserInterface
+class User implements UserInterface, PasswordAuthenticatedUserInterface, JWTUserInterface
 {
     const ROLES = [['ROLE_USER'], ['ROLE_ADMIN'], ['ROLE_SUPER_ADMIN']];
 
@@ -181,6 +226,13 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->id;
     }
 
+    public function setId(?int $id): self
+    {
+        $this->id = $id;
+
+        return $this;
+    }
+
     public function getEmail(): ?string
     {
         return $this->email;
@@ -230,7 +282,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @see PasswordAuthenticatedUserInterface
      */
-    public function getPassword(): string
+    public function getPassword(): ?string
     {
         return $this->password;
     }
@@ -303,5 +355,15 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->client = $client;
 
         return $this;
+    }
+
+    public static function createFromPayload($id, array $payload)
+    {
+        $user = new User();
+        $user->setId($id);
+        $user->setRoles($payload['roles']);
+        $user->setEmail($payload['userIdentifier']);
+
+        return $user;
     }
 }

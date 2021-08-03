@@ -20,8 +20,15 @@ final class JwtDecorator implements OpenApiFactoryInterface
     public function __invoke(array $context = []): OpenApi
     {
         $openApi = ($this->decorated)($context);
-        $schemas = $openApi->getComponents()->getSchemas();
 
+        $securitySchemas = $openApi->getComponents()->getSecuritySchemes();
+        $securitySchemas['bearerAuth'] = new \ArrayObject([
+            'type' => 'http',
+            'scheme' => 'bearer',
+            'bearerFormat' => 'JWT',
+        ]);
+
+        $schemas = $openApi->getComponents()->getSchemas();
         $schemas['Token'] = new \ArrayObject([
             'type' => 'object',
             'properties' => [
@@ -50,7 +57,7 @@ final class JwtDecorator implements OpenApiFactoryInterface
             ref: 'JWT Token',
             post: new Model\Operation(
                 operationId: 'postCredentialsItem',
-                tags: ['Token'],
+                tags: ['Authentication'],
                 responses: [
                         '200' => [
                             'description' => 'Get JWT token',
@@ -65,7 +72,7 @@ final class JwtDecorator implements OpenApiFactoryInterface
                     ],
                 summary: 'Get JWT token to login.',
                 requestBody: new Model\RequestBody(
-                    description: 'Generate new JWT Token',
+                    description: 'Get JWT token to paste in bearerAuth value field when click on "Authorize" button or on a lock icon',
                     content: new \ArrayObject([
                         'application/json' => [
                             'schema' => [
