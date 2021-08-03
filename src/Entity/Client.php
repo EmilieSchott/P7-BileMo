@@ -101,12 +101,12 @@ class Client
     #[
         Groups(['read_Client_collection', 'read_Client_item', 'read_User_collection', 'read_User_item', 'write_Client_item']),
         Assert\NotBlank(
-            message: "Vous devez indiquer le nom de l'entreprise.",
+            message: 'Company name should not be blank.',
             groups: ['write_Client_item']
         ),
         Assert\Length(
             max: 75,
-            maxMessage: "Le nom de l'entreprise doit faire maximum {{ limit }} caractères.",
+            maxMessage: 'Company name is too long. It should have {{ limit }} characters or less. (You should indicate unit)',
             groups: ['write_Client_item']
         )
     ]
@@ -120,7 +120,7 @@ class Client
     ),
         Assert\Length(
             max: 20,
-            maxMessage: "Le numéro de téléphone de l'entreprise doit faire maximum {{ limit }} caractères.",
+            maxMessage: 'Phone number is too long. It should have {{ limit }} characters or less. (You should indicate unit)',
             groups: ['write_Client_item']
         )
     ]
@@ -132,12 +132,12 @@ class Client
     #[
         Groups(['read_Client_item', 'read_Client_collection', 'write_Client_item']),
         Assert\NotBlank(
-            message: "Vous devez indiquer une adresse pour l'entreprise.",
+            message: 'Company address should not be blank.',
             groups: ['write_Client_item']
         ),
         Assert\Length(
             max: 255,
-            maxMessage: "L'adresse de l'entreprise doit faire maximum {{ limit }} caractères.",
+            maxMessage: 'Company address is too long. It should have {{ limit }} characters or less. (You should indicate unit)',
             groups: ['write_Client_item']
         )
     ]
@@ -149,12 +149,12 @@ class Client
     #[
         Groups(['read_Client_item', 'write_Client_item']),
         Assert\NotBlank(
-            message: "Vous devez indiquer le numéro SIRET de l'entreprise.",
+            message: 'Company SIRET number should not be blank.',
             groups: ['write_Client_item']
         ),
         Assert\Length(
             max: 45,
-            maxMessage: "Le numéro SIRET de l'entreprise doit faire maximum {{ limit }} caractères.",
+            maxMessage: 'Company SIRET number is too long. It should have {{ limit }} characters or less. (You should indicate unit)',
             groups: ['write_Client_item']
         )
     ]

@@ -99,12 +99,12 @@ class Product
     #[
         Groups(['read_Product_collection', 'read_Product_item', 'write_Product_item']),
         Assert\NotBlank(
-            message: 'Vous devez indiquer le nom du produit.',
+            message: 'Product name should not be blank.',
             groups: ['write_Product_item']
         ),
         Assert\Length(
             max: 150,
-            maxMessage: 'Le nom du produit doit faire maximum {{ limit }} caractères.',
+            maxMessage: 'Product name is too long. It should have {{ limit }} characters or less.',
             groups: ['write_Product_item']
         )
     ]
@@ -122,12 +122,12 @@ class Product
     #[
         Groups(['read_Product_collection', 'read_Product_item', 'write_Product_item']),
         Assert\NotBlank(
-            message: 'Vous devez indiquer la marque du produit.',
+            message: 'Product brand should not be blank.',
             groups: ['write_Product_item']
         ),
         Assert\Length(
             max: 45,
-            maxMessage: 'La marque du produit doit faire maximum {{ limit }} caractères.',
+            maxMessage: 'Product brand is too long. It should have {{ limit }} characters or less.',
             groups: ['write_Product_item']
         )
     ]
@@ -139,12 +139,12 @@ class Product
     #[
         Groups(['read_Product_collection', 'read_Product_item', 'write_Product_item']),
         Assert\NotBlank(
-            message: 'Vous devez indiquer le prix du produit.',
+            message: 'Product price should not be blank.',
             groups: ['write_Product_item']
         ),
         Assert\Length(
             max: 15,
-            maxMessage: 'Le prix du produit doit faire maximum {{ limit }} caractères. (Indiquez la devise)',
+            maxMessage: 'Product price is too long. It should have {{ limit }} characters or less. (you should indicate currency)',
             groups: ['write_Product_item']
         )
     ]
@@ -156,12 +156,12 @@ class Product
     #[
         Groups(['read_Product_collection', 'read_Product_item', 'write_Product_item']),
         Assert\NotBlank(
-            message : 'Vous devez indiquer un stock pour le produit.',
+            message : 'Product stock should not be blank.',
             groups: ['write_Product_item']
         ),
         Assert\Length(
             max: 11,
-            maxMessage: 'Ls stock du produit doit faire maximum {{ limit }} chiffres.',
+            maxMessage: 'Product stock is too long. It should have {{ limit }} characters or less.',
             groups: ['write_Product_item']
         )
     ]
@@ -173,7 +173,7 @@ class Product
     #[
         Groups(['read_Product_item', 'write_Product_item']),
         Assert\NotBlank(
-            message: 'Vous devez indiquer une description pour le produit.',
+            message: 'Product description should not be blank.',
             groups: ['write_Product_item']
         )
 
@@ -186,11 +186,11 @@ class Product
     #[
         Groups(['read_Product_collection', 'read_Product_item', 'write_Product_item']),
         Assert\NotBlank(
-            message: "Vous devez indiquer une URL pour récupérer l'image du produit.",
+            message: 'Product image should not be blank.',
             groups: ['write_Product_item']
         ),
         Assert\Url(
-            message: "L'Url spécifié n'est pas valide.",
+            message: 'Url is not valid.',
             groups: ['write_Product_item']
         )
     ]
@@ -202,12 +202,12 @@ class Product
     #[
         Groups(['read_Product_item', 'write_Product_item']),
         Assert\NotBlank(
-            message: "Vous devez indiquer le système d'exploitation du produit.",
+            message: 'Product operating system should not be blank.',
             groups: ['write_Product_item']
         ),
         Assert\Length(
             max: 45,
-            maxMessage: "Le système d'exploitation du produit doit faire maximum {{ limit }} caractères.",
+            maxMessage: 'Product operating system is too long. It should have {{ limit }} characters or less.',
             groups: ['write_Product_item']
         )
     ]
@@ -219,7 +219,7 @@ class Product
     #[Groups(['read_Product_item', 'write_Product_item']),
     Assert\Length(
         max: 15,
-        maxMessage: "La capacité de la mémoire du produit doit faire maximum {{ limit }} caractères. (Indiquez l'unité)",
+        maxMessage: 'Memory capacity is too long. It should have {{ limit }} characters or less.',
         groups: ['write_Product_item']
     )
     ]
@@ -232,7 +232,7 @@ class Product
         Groups(['read_Product_item', 'write_Product_item']),
         Assert\Length(
             max: 15,
-            maxMessage: "La taille de l'écran du produit doit faire maximum {{ limit }} caractères. (Indiquez l'unité)",
+            maxMessage: 'Screen size is too long. It should have {{ limit }} characters or less. (You should indicate unit)',
             groups: ['write_Product_item']
         )
     ]
@@ -245,7 +245,7 @@ class Product
         Groups(['read_Product_item', 'write_Product_item']),
         Assert\Length(
             max: 15,
-            maxMessage: "La résolution des photos prises par le produit doit faire maximum {{ limit }} caractères. (Indiquez l'unité)",
+            maxMessage: 'Photo resolution is too long. It should have {{ limit }} characters or less. (You should indicate unit)',
             groups: ['write_Product_item']
         )
     ]
@@ -258,7 +258,7 @@ class Product
         Groups(['read_Product_item', 'write_Product_item']),
         Assert\Length(
             max: 15,
-            maxMessage: "Le poids du produit doit faire maximum {{ limit }} caractères. (Indiquez l'unité)",
+            maxMessage: 'Weight is too long. It should have {{ limit }} characters or less. (You should indicate unit)',
             groups: ['write_Product_item']
         )
     ]

@@ -144,12 +144,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, JWTUser
     #[
         Groups(['read_Client_item', 'read_User_collection', 'read_User_item', 'write_User_item']),
         Assert\NotBlank(
-            message: 'Vous devez indiquer un prénom.',
+            message: 'First name should not be blank.',
             groups: ['write_User_item']
         ),
         Assert\Length(
             max: 25,
-            maxMessage: 'Le prénom doit faire maximum {{ limit }} caractères.',
+            maxMessage: 'First name is too long. It should have {{ limit }} characters or less.',
             groups: ['write_User_item']
         )
     ]
@@ -161,12 +161,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, JWTUser
     #[
         Groups(['read_Client_item', 'read_User_collection', 'read_User_item', 'write_User_item']),
         Assert\NotBlank(
-            message: 'Vous devez indiquer un nom de famille.',
+            message: 'Last name should not be blank.',
             groups: ['write_User_item']
         ),
         Assert\Length(
             max: 45,
-            maxMessage: 'Le nom de famille doit faire maximum {{ limit }} caractères.',
+            maxMessage: 'Last name is too long. It should have {{ limit }} characters or less.',
             groups: ['write_User_item']
         )
     ]
@@ -186,7 +186,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, JWTUser
         Assert\Choice(
             choices: User::ROLES,
             groups: ['write_User_item'],
-            message: "{{ value }} n'est pas un choix valide. En fonction de votre propre niveau d'acréditation, vous pouvez attribuer : {{ choices }}."
+            message: '{{ value }} is not a valid choice. According to your own role, Valid choices could be : {{ choices }}.'
         )
     ]
     private $roles = [];
@@ -198,7 +198,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, JWTUser
         Groups(['read_User_item', 'write_User_item']),
         Assert\Length(
             max: 20,
-            maxMessage: 'Le numéro de téléphone doit faire maximum {{ limit }} caractères.',
+            maxMessage: 'Phone number is too long. It should have {{ limit }} characters or less.',
             groups: ['write_User_item']
         )
     ]
@@ -210,16 +210,16 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, JWTUser
     #[
         Groups(['read_User_item', 'write_User_item']),
         Assert\NotBlank(
-            message: 'Vous devez indiquer un email.',
+            message: 'Email should not be blank.',
             groups: ['write_User_item']
         ),
         Assert\Email(
-            message: "L'email indiqué n'est pas valide.",
+            message: 'Email is not valid.',
             groups: ['write_User_item']
         ),
         Assert\Length(
             max: 180,
-            maxMessage: "L'email doit faire maximum {{ limit }} caractères.",
+            maxMessage: 'Email is too long. It should have {{ limit }} characters or less.',
             groups: ['write_User_item']
         )
     ]
@@ -232,7 +232,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, JWTUser
     #[
         Groups(['write_User_item']),
         Assert\NotBlank(
-            message: 'Vous devez indiquer un mot de passe.',
+            message: 'Password should not be blank.',
             groups: ['write_User_item']
         )
     ]
