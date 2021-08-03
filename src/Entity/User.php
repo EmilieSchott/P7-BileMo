@@ -63,13 +63,13 @@ use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
             ],
         ],
         'get' => [
-            'security' => 'is_granted("ROLE_ADMIN")',
             'normalization_context' => [
                 'groups' => [
                     'read_User_collection',
                 ],
                 'skip_null_values' => false,
             ],
+            'security' => 'is_granted("ROLE_ADMIN")',
             'openapi_context' => [
                 'security' => [['bearerAuth' => []]],
             ],
@@ -83,6 +83,10 @@ use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
             'validation_groups' => [
                 'write_User_item',
             ],
+            'security' => 'is_granted("ROLE_ADMIN")',
+            'openapi_context' => [
+                'security' => [['bearerAuth' => []]],
+            ],
         ],
     ],
     itemOperations: [
@@ -93,8 +97,17 @@ use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
                 ],
                 'skip_null_values' => false,
             ],
+            'security' => 'is_granted("ROLE_ADMIN")',
+            'openapi_context' => [
+                'security' => [['bearerAuth' => []]],
+            ],
         ],
-        'delete',
+        'delete' => [
+            'security' => 'is_granted("ROLE_ADMIN")',
+            'openapi_context' => [
+                'security' => [['bearerAuth' => []]],
+            ],
+        ],
         'patch' => [
             'denormalization_context' => [
                 'groups' => [
@@ -103,6 +116,10 @@ use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
             ],
             'validation_groups' => [
                 'write_User_item',
+            ],
+            'security' => 'is_granted("ROLE_ADMIN")',
+            'openapi_context' => [
+                'security' => [['bearerAuth' => []]],
             ],
         ],
     ],

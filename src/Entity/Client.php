@@ -28,6 +28,10 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
                 ],
                 'skip_null_values' => false,
             ],
+            'security' => 'is_granted("ROLE_USER")',
+            'openapi_context' => [
+                'security' => [['bearerAuth' => []]],
+            ],
         ],
         'post' => [
             'denormalization_context' => [
@@ -37,6 +41,10 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
             ],
             'validation_groups' => [
                 'write_Client_item',
+            ],
+            'security' => 'is_granted("ROLE_SUPER_ADMIN")',
+            'openapi_context' => [
+                'security' => [['bearerAuth' => []]],
             ],
         ],
     ],
@@ -48,8 +56,17 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
                 ],
                 'skip_null_values' => false,
             ],
+            'security' => 'is_granted("ROLE_USER")',
+            'openapi_context' => [
+                'security' => [['bearerAuth' => []]],
+            ],
         ],
-        'delete',
+        'delete' => [
+            'security' => 'is_granted("ROLE_SUPER_ADMIN")',
+            'openapi_context' => [
+                'security' => [['bearerAuth' => []]],
+            ],
+        ],
         'patch' => [
             'denormalization_context' => [
                 'groups' => [
@@ -58,6 +75,10 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
             ],
             'validation_groups' => [
                 'write_Client_item',
+            ],
+            'security' => 'is_granted("ROLE_ADMIN")',
+            'openapi_context' => [
+                'security' => [['bearerAuth' => []]],
             ],
         ],
     ],
