@@ -92,14 +92,14 @@ class Client
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
      */
-    #[Groups(['read_Client_collection', 'read_User_collection', 'read_User_item'])]
+    #[Groups(['read_Client_collection', 'read_User_collection', 'read_User_item', 'read_token'])]
     private $id;
 
     /**
      * @ORM\Column(type="string", length=75)
      */
     #[
-        Groups(['read_Client_collection', 'read_Client_item', 'read_User_collection', 'read_User_item', 'write_Client_item']),
+        Groups(['read_Client_collection', 'read_Client_item', 'read_User_collection', 'read_User_item', 'write_Client_item', 'read_token']),
         Assert\NotBlank(
             message: 'Company name should not be blank.',
             groups: ['write_Client_item']
@@ -174,6 +174,13 @@ class Client
     public function getId(): ?int
     {
         return $this->id;
+    }
+
+    public function setId(?int $id): self
+    {
+        $this->id = $id;
+
+        return $this;
     }
 
     public function getCompanyName(): ?string

@@ -43,23 +43,30 @@ use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
                                     'type' => 'object',
                                     'properties' => [
                                         'id' => ['type' => 'integer'],
-                                        'roles' => ['type' => 'array'],
                                         'email' => ['type' => 'string'],
-                                        'userIdentifier' => ['type' => 'string'],
-                                        'username' => ['type' => 'string'],
+                                        'roles' => ['type' => 'array'],
+                                        'client' => ['type' => 'array'],
                                     ],
                                 ],
                                 'example' => [
                                     'id' => 1,
-                                    'roles' => ['ROLE_USER'],
                                     'email' => 'johndoe@example.com',
-                                    'userIdentifier' => 'johndoe@example.com',
-                                    'username' => 'johndoe@example.com',
+                                    'roles' => ['ROLE_USER'],
+                                    'client' => [
+                                        'id' => 1,
+                                        'companyName' => 'Acme',
+                                    ],
                                 ],
                             ],
                         ],
                     ],
                 ],
+            ],
+            'normalization_context' => [
+                'groups' => [
+                    'read_token',
+                ],
+                'skip_null_values' => false,
             ],
         ],
         'get' => [
@@ -135,7 +142,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, JWTUser
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
      */
-    #[Groups(['read_Client_item', 'read_User_collection'])]
+    #[Groups(['read_Client_item', 'read_User_collection', 'read_token'])]
     private $id;
 
     /**
@@ -173,42 +180,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, JWTUser
     private $lastName;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Client::class, inversedBy="users")
-     */
-    #[Groups(['read_User_collection', 'read_User_item', 'write_User_item'])]
-    private $client;
-
-    /**
-     * @ORM\Column(type="json")
-     */
-    #[
-        Groups(['read_Client_item', 'read_User_collection', 'read_User_item', 'write_User_item']),
-        Assert\Choice(
-            choices: User::ROLES,
-            groups: ['write_User_item'],
-            message: '{{ value }} is not a valid choice. According to your own role, Valid choices could be : {{ choices }}.'
-        )
-    ]
-    private $roles = [];
-
-    /**
-     * @ORM\Column(type="string", length=20, nullable=true)
-     */
-    #[
-        Groups(['read_User_item', 'write_User_item']),
-        Assert\Length(
-            max: 20,
-            maxMessage: 'Phone number is too long. It should have {{ limit }} characters or less.',
-            groups: ['write_User_item']
-        )
-    ]
-    private $phoneNumber;
-
-    /**
      * @ORM\Column(type="string", length=180, unique=true)
      */
     #[
-        Groups(['read_User_item', 'write_User_item']),
+        Groups(['read_User_item', 'write_User_item', 'read_token']),
         Assert\NotBlank(
             message: 'Email should not be blank.',
             groups: ['write_User_item']
@@ -224,6 +199,38 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, JWTUser
         )
     ]
     private $email;
+
+    /**
+     * @ORM\Column(type="json")
+     */
+    #[
+        Groups(['read_Client_item', 'read_User_collection', 'read_User_item', 'write_User_item', 'read_token']),
+        Assert\Choice(
+            choices: User::ROLES,
+            groups: ['write_User_item'],
+            message: '{{ value }} is not a valid choice. According to your own role, Valid choices could be : {{ choices }}.'
+        )
+    ]
+    private $roles = [];
+
+    /**
+     * @ORM\ManyToOne(targetEntity=Client::class, inversedBy="users")
+     */
+    #[Groups(['read_User_collection', 'read_User_item', 'write_User_item', 'read_token'])]
+    private $client;
+
+    /**
+     * @ORM\Column(type="string", length=20, nullable=true)
+     */
+    #[
+        Groups(['read_User_item', 'write_User_item']),
+        Assert\Length(
+            max: 20,
+            maxMessage: 'Phone number is too long. It should have {{ limit }} characters or less.',
+            groups: ['write_User_item']
+        )
+    ]
+    private $phoneNumber;
 
     /**
      * @var string The hashed password
@@ -380,6 +387,13 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, JWTUser
         $user->setId($id);
         $user->setRoles($payload['roles']);
         $user->setEmail($payload['userIdentifier']);
+        $client = null;
+        if (null !== $payload['clientId']) {
+            $client = new Client();
+            $client->setId($payload['clientId']);
+            $client->setCompanyName($payload['clientName']);
+        }
+        $user->setClient($client);
 
         return $user;
     }
