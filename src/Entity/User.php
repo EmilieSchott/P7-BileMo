@@ -5,6 +5,7 @@ namespace App\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\UserRepository;
 use App\Controller\MyDatasController;
+use ApiPlatform\Core\Annotation\ApiProperty;
 use ApiPlatform\Core\Annotation\ApiResource;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -76,7 +77,7 @@ use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
                 ],
                 'skip_null_values' => false,
             ],
-            'security' => 'is_granted("ROLE_ADMIN")',
+            'security' => 'is_granted("ROLE_USER")',
             'openapi_context' => [
                 'security' => [['bearerAuth' => []]],
             ],
@@ -93,6 +94,7 @@ use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
             'security' => 'is_granted("ROLE_ADMIN")',
             'openapi_context' => [
                 'security' => [['bearerAuth' => []]],
+                'description' => 'Creates a User resource. Super admins can create admins and affect them to a client. Admins can only create users linked to the same client than themselves.',
             ],
         ],
     ],
@@ -127,6 +129,7 @@ use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
             'security' => 'is_granted("ROLE_ADMIN")',
             'openapi_context' => [
                 'security' => [['bearerAuth' => []]],
+                'description' => 'Updates the User resource. Only a super admin can change client or roles properties.',
             ],
         ],
     ],
@@ -158,6 +161,13 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, JWTUser
             max: 25,
             maxMessage: 'First name is too long. It should have {{ limit }} characters or less.',
             groups: ['write_User_item']
+        ),
+        ApiProperty(
+            attributes: [
+                'openapi_context' => [
+                    'example' => 'Jean-Luc',
+                ],
+            ]
         )
     ]
     private $firstName;
@@ -175,6 +185,13 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, JWTUser
             max: 45,
             maxMessage: 'Last name is too long. It should have {{ limit }} characters or less.',
             groups: ['write_User_item']
+        ),
+        ApiProperty(
+            attributes: [
+                'openapi_context' => [
+                    'example' => 'Picard',
+                ],
+            ]
         )
     ]
     private $lastName;
@@ -196,6 +213,13 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, JWTUser
             max: 180,
             maxMessage: 'Email is too long. It should have {{ limit }} characters or less.',
             groups: ['write_User_item']
+        ),
+        ApiProperty(
+            attributes: [
+                'openapi_context' => [
+                    'example' => 'jean-luc.picard@starfleet.org',
+                ],
+            ]
         )
     ]
     private $email;
@@ -209,6 +233,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, JWTUser
             choices: User::ROLES,
             groups: ['write_User_item'],
             message: '{{ value }} is not a valid choice. According to your own role, Valid choices could be : {{ choices }}.'
+        ),
+        ApiProperty(
+            attributes: [
+                'openapi_context' => [
+                    'enum' => [['ROLE_USER'], ['ROLE_ADMIN'], ['ROLE_SUPER_ADMIN']],
+                    'example' => ['ROLE_USER'],
+                ],
+            ]
         )
     ]
     private $roles = [];
@@ -216,7 +248,16 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, JWTUser
     /**
      * @ORM\ManyToOne(targetEntity=Client::class, inversedBy="users")
      */
-    #[Groups(['read_User_collection', 'read_User_item', 'write_User_item', 'read_token'])]
+    #[
+        Groups(['read_User_collection', 'read_User_item', 'write_User_item', 'read_token']),
+        ApiProperty(
+            attributes: [
+                'openapi_context' => [
+                    'example' => 'api/clients/2',
+                ],
+            ]
+        )
+    ]
     private $client;
 
     /**
@@ -228,6 +269,13 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, JWTUser
             max: 20,
             maxMessage: 'Phone number is too long. It should have {{ limit }} characters or less.',
             groups: ['write_User_item']
+        ),
+        ApiProperty(
+            attributes: [
+                'openapi_context' => [
+                    'example' => '06 54 89 35 52',
+                ],
+            ]
         )
     ]
     private $phoneNumber;
@@ -241,6 +289,13 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, JWTUser
         Assert\NotBlank(
             message: 'Password should not be blank.',
             groups: ['write_User_item']
+        ),
+        ApiProperty(
+            attributes: [
+                'openapi_context' => [
+                    'example' => 'apassword',
+                ],
+            ]
         )
     ]
     private $password;

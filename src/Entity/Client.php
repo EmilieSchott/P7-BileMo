@@ -5,6 +5,7 @@ namespace App\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\ClientRepository;
 use Doctrine\Common\Collections\Collection;
+use ApiPlatform\Core\Annotation\ApiProperty;
 use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Serializer\Annotation\Groups;
@@ -28,7 +29,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
                 ],
                 'skip_null_values' => false,
             ],
-            'security' => 'is_granted("ROLE_USER")',
+            'security' => 'is_granted("ROLE_SUPER_ADMIN")',
             'openapi_context' => [
                 'security' => [['bearerAuth' => []]],
             ],
@@ -56,7 +57,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
                 ],
                 'skip_null_values' => false,
             ],
-            'security' => 'is_granted("ROLE_USER")',
+            'security' => 'is_granted("ROLE_SUPER_ADMIN")',
             'openapi_context' => [
                 'security' => [['bearerAuth' => []]],
             ],
@@ -76,7 +77,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
             'validation_groups' => [
                 'write_Client_item',
             ],
-            'security' => 'is_granted("ROLE_ADMIN")',
+            'security' => 'is_granted("ROLE_SUPER_ADMIN")',
             'openapi_context' => [
                 'security' => [['bearerAuth' => []]],
             ],
@@ -108,6 +109,13 @@ class Client
             max: 75,
             maxMessage: 'Company name is too long. It should have {{ limit }} characters or less. (You should indicate unit)',
             groups: ['write_Client_item']
+        ),
+        ApiProperty(
+            attributes: [
+                'openapi_context' => [
+                    'example' => 'Your company name',
+                ],
+            ]
         )
     ]
     private $companyName;
@@ -122,6 +130,13 @@ class Client
             max: 20,
             maxMessage: 'Phone number is too long. It should have {{ limit }} characters or less. (You should indicate unit)',
             groups: ['write_Client_item']
+        ),
+        ApiProperty(
+            attributes: [
+                'openapi_context' => [
+                    'example' => '02 54 87 62 36',
+                ],
+            ]
         )
     ]
     private $phoneNumber;
@@ -139,6 +154,13 @@ class Client
             max: 255,
             maxMessage: 'Company address is too long. It should have {{ limit }} characters or less. (You should indicate unit)',
             groups: ['write_Client_item']
+        ),
+        ApiProperty(
+            attributes: [
+                'openapi_context' => [
+                    'example' => '11 rue de la rivière 75013 Paris',
+                ],
+            ]
         )
     ]
     private $address;
@@ -156,6 +178,13 @@ class Client
             max: 45,
             maxMessage: 'Company SIRET number is too long. It should have {{ limit }} characters or less. (You should indicate unit)',
             groups: ['write_Client_item']
+        ),
+        ApiProperty(
+            attributes: [
+                'openapi_context' => [
+                    'example' => 'Your SIRET number',
+                ],
+            ]
         )
     ]
     private $SiretNumber;

@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\ProductRepository;
+use ApiPlatform\Core\Annotation\ApiProperty;
 use ApiPlatform\Core\Annotation\ApiResource;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -106,6 +107,13 @@ class Product
             max: 150,
             maxMessage: 'Product name is too long. It should have {{ limit }} characters or less.',
             groups: ['write_Product_item']
+        ),
+        ApiProperty(
+            attributes: [
+                'openapi_context' => [
+                    'example' => 'Product name',
+                ],
+            ]
         )
     ]
     private $name;
@@ -129,6 +137,13 @@ class Product
             max: 45,
             maxMessage: 'Product brand is too long. It should have {{ limit }} characters or less.',
             groups: ['write_Product_item']
+        ),
+        ApiProperty(
+            attributes: [
+                'openapi_context' => [
+                    'example' => 'Samsung',
+                ],
+            ]
         )
     ]
     private $brand;
@@ -146,6 +161,13 @@ class Product
             max: 15,
             maxMessage: 'Product price is too long. It should have {{ limit }} characters or less. (you should indicate currency)',
             groups: ['write_Product_item']
+        ),
+        ApiProperty(
+            attributes: [
+                'openapi_context' => [
+                    'example' => '230€',
+                ],
+            ]
         )
     ]
     private $price;
@@ -163,6 +185,13 @@ class Product
             max: 11,
             maxMessage: 'Product stock is too long. It should have {{ limit }} characters or less.',
             groups: ['write_Product_item']
+        ),
+        ApiProperty(
+            attributes: [
+                'openapi_context' => [
+                    'example' => '75',
+                ],
+            ]
         )
     ]
     private $stock;
@@ -175,6 +204,13 @@ class Product
         Assert\NotBlank(
             message: 'Product description should not be blank.',
             groups: ['write_Product_item']
+        ),
+        ApiProperty(
+            attributes: [
+                'openapi_context' => [
+                    'example' => 'Product description',
+                ],
+            ]
         )
 
     ]
@@ -192,6 +228,13 @@ class Product
         Assert\Url(
             message: 'Url is not valid.',
             groups: ['write_Product_item']
+        ),
+        ApiProperty(
+            attributes: [
+                'openapi_context' => [
+                    'example' => 'https://link-to-image.com',
+                ],
+            ]
         )
     ]
     private $imageUrl;
@@ -209,6 +252,13 @@ class Product
             max: 45,
             maxMessage: 'Product operating system is too long. It should have {{ limit }} characters or less.',
             groups: ['write_Product_item']
+        ),
+        ApiProperty(
+            attributes: [
+                'openapi_context' => [
+                    'example' => 'Android',
+                ],
+            ]
         )
     ]
     private $operatingSystem;
@@ -221,6 +271,13 @@ class Product
         max: 15,
         maxMessage: 'Memory capacity is too long. It should have {{ limit }} characters or less.',
         groups: ['write_Product_item']
+    ),
+    ApiProperty(
+        attributes: [
+            'openapi_context' => [
+                'example' => '16Go',
+            ],
+        ]
     )
     ]
     private $stockageCapacity;
@@ -234,6 +291,13 @@ class Product
             max: 15,
             maxMessage: 'Screen size is too long. It should have {{ limit }} characters or less. (You should indicate unit)',
             groups: ['write_Product_item']
+        ),
+        ApiProperty(
+            attributes: [
+                'openapi_context' => [
+                    'example' => '16 pouces',
+                ],
+            ]
         )
     ]
     private $screenSize;
@@ -247,6 +311,13 @@ class Product
             max: 15,
             maxMessage: 'Photo resolution is too long. It should have {{ limit }} characters or less. (You should indicate unit)',
             groups: ['write_Product_item']
+        ),
+        ApiProperty(
+            attributes: [
+                'openapi_context' => [
+                    'example' => '125Mpx',
+                ],
+            ]
         )
     ]
     private $photoResolution;
@@ -260,6 +331,13 @@ class Product
             max: 15,
             maxMessage: 'Weight is too long. It should have {{ limit }} characters or less. (You should indicate unit)',
             groups: ['write_Product_item']
+        ),
+        ApiProperty(
+            attributes: [
+                'openapi_context' => [
+                    'example' => '230g',
+                ],
+            ]
         )
     ]
     private $weight;
