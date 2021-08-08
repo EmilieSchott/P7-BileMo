@@ -4,11 +4,14 @@ namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\UserRepository;
+use App\Controller\MyDatasController;
+use ApiPlatform\Core\Annotation\ApiProperty;
 use ApiPlatform\Core\Annotation\ApiResource;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Lexik\Bundle\JWTAuthenticationBundle\Security\User\JWTUserInterface;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 
 /**
@@ -18,54 +21,122 @@ use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
  *    message="Cette adresse mail est déjà utilisée.",
  *    groups={"write_User_item"}
  * )
- * @ApiResource(
- *     collectionOperations={
- *         "get"={
- *             "normalization_context"={
- *                 "groups"={
- *                     "read_User_collection",
- *                 },
- *                 "skip_null_values"=false
- *             },
- *         },
- *         "post"={
- *             "denormalization_context"={
- *                 "groups"={
- *                     "write_User_item",
- *                 },
- *             },
- *             "validation_groups"={
- *                 "create_User_item",
- *                 "write_User_item",
- *             },
- *         },
- *     },
- *     itemOperations={
- *         "get"={
- *             "normalization_context"={
- *                 "groups"={
- *                     "read_User_item",
- *                 },
- *                 "skip_null_values"=false
- *             },
- *         },
- *         "delete",
- *         "patch"={
- *             "denormalization_context"={
- *                 "groups"={
- *                     "write_User_item",
- *                 },
- *             },
- *             "validation_groups"={
- *                 "write_User_item",
- *             },
- *         },
- *     },
- *     paginationMaximumItemsPerPage=30,
- *     paginationClientItemsPerPage=true,
- * )
  */
-class User implements UserInterface, PasswordAuthenticatedUserInterface
+#[ApiResource(
+    collectionOperations : [
+        'my_datas' => [
+            'security' => 'is_granted("ROLE_USER")',
+            'pagination_enabled' => false,
+            'method' => 'GET',
+            'path' => '/users/my-datas',
+            'controller' => MyDatasController::class,
+            'read' => false,
+            'openapi_context' => [
+                'security' => [['bearerAuth' => []]],
+                'summary' => 'Get datas on the authenticated user',
+                'description' => 'Get id, email and roles for the authenticated user',
+                'responses' => [
+                    '200' => [
+                        'description' => 'Get datas registered in the JWT token used for authentication.',
+                        'content' => [
+                            'application/json' => [
+                                'schema' => [
+                                    'type' => 'object',
+                                    'properties' => [
+                                        'id' => ['type' => 'integer'],
+                                        'email' => ['type' => 'string'],
+                                        'roles' => ['type' => 'array'],
+                                        'client' => ['type' => 'array'],
+                                    ],
+                                ],
+                                'example' => [
+                                    'id' => 1,
+                                    'email' => 'johndoe@example.com',
+                                    'roles' => ['ROLE_USER'],
+                                    'client' => [
+                                        'id' => 1,
+                                        'companyName' => 'Acme',
+                                    ],
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+            'normalization_context' => [
+                'groups' => [
+                    'read_token',
+                ],
+                'skip_null_values' => false,
+            ],
+        ],
+        'get' => [
+            'normalization_context' => [
+                'groups' => [
+                    'read_User_collection',
+                ],
+                'skip_null_values' => false,
+            ],
+            'security' => 'is_granted("ROLE_USER")',
+            'openapi_context' => [
+                'security' => [['bearerAuth' => []]],
+            ],
+        ],
+        'post' => [
+            'denormalization_context' => [
+                'groups' => [
+                    'write_User_item',
+                ],
+            ],
+            'validation_groups' => [
+                'write_User_item',
+            ],
+            'security' => 'is_granted("ROLE_ADMIN")',
+            'openapi_context' => [
+                'security' => [['bearerAuth' => []]],
+                'description' => 'Creates a User resource. Super admins can create admins and affect them to a client. Admins can only create users linked to the same client than themselves.',
+            ],
+        ],
+    ],
+    itemOperations: [
+        'get' => [
+            'normalization_context' => [
+                'groups' => [
+                    'read_User_item',
+                ],
+                'skip_null_values' => false,
+            ],
+            'security' => 'is_granted("ROLE_ADMIN")',
+            'openapi_context' => [
+                'security' => [['bearerAuth' => []]],
+            ],
+        ],
+        'delete' => [
+            'security' => 'is_granted("ROLE_ADMIN")',
+            'openapi_context' => [
+                'security' => [['bearerAuth' => []]],
+            ],
+        ],
+        'patch' => [
+            'denormalization_context' => [
+                'groups' => [
+                    'write_User_item',
+                ],
+            ],
+            'validation_groups' => [
+                'write_User_item',
+            ],
+            'security' => 'is_granted("ROLE_ADMIN")',
+            'openapi_context' => [
+                'security' => [['bearerAuth' => []]],
+                'description' => 'Updates the User resource. Only a super admin can change client or roles properties.',
+            ],
+        ],
+    ],
+    paginationMaximumItemsPerPage: 30,
+    paginationClientItemsPerPage: true,
+)]
+class User implements UserInterface, PasswordAuthenticatedUserInterface, JWTUserInterface
 {
     const ROLES = [['ROLE_USER'], ['ROLE_ADMIN'], ['ROLE_SUPER_ADMIN']];
 
@@ -73,100 +144,172 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
-     * @Groups({"read_Client_item", "read_User_collection"})
      */
+    #[Groups(['read_Client_item', 'read_User_collection', 'read_token'])]
     private $id;
 
     /**
      * @ORM\Column(type="string", length=25)
-     * @Groups({"read_Client_item", "read_User_collection", "read_User_item", "write_User_item" })
-     * @Assert\NotBlank(
-     *     message = "Vous devez indiquer un prénom.",
-     *     groups={"create_User_item"}
-     * )
-     * @Assert\Length(
-     *     max = 25,
-     *     maxMessage = "Le prénom doit faire maximum {{ limit }} caractères.",
-     *     groups={"write_User_item"}
-     * )
      */
+    #[
+        Groups(['read_Client_item', 'read_User_collection', 'read_User_item', 'write_User_item']),
+        Assert\NotBlank(
+            message: 'First name should not be blank.',
+            groups: ['write_User_item']
+        ),
+        Assert\Length(
+            max: 25,
+            maxMessage: 'First name is too long. It should have {{ limit }} characters or less.',
+            groups: ['write_User_item']
+        ),
+        ApiProperty(
+            attributes: [
+                'openapi_context' => [
+                    'example' => 'Jean-Luc',
+                ],
+            ]
+        )
+    ]
     private $firstName;
 
     /**
      * @ORM\Column(type="string", length=45)
-     * @Groups({"read_Client_item", "read_User_collection", "read_User_item", "write_User_item" })
-     * @Assert\NotBlank(
-     *     message = "Vous devez indiquer un nom de famille.",
-     *     groups={"create_User_item"}
-     * )
-     * @Assert\Length(
-     *     max = 45,
-     *     maxMessage = "Le nom de famille doit faire maximum {{ limit }} caractères.",
-     *     groups={"write_User_item"}
-     * )
      */
+    #[
+        Groups(['read_Client_item', 'read_User_collection', 'read_User_item', 'write_User_item']),
+        Assert\NotBlank(
+            message: 'Last name should not be blank.',
+            groups: ['write_User_item']
+        ),
+        Assert\Length(
+            max: 45,
+            maxMessage: 'Last name is too long. It should have {{ limit }} characters or less.',
+            groups: ['write_User_item']
+        ),
+        ApiProperty(
+            attributes: [
+                'openapi_context' => [
+                    'example' => 'Picard',
+                ],
+            ]
+        )
+    ]
     private $lastName;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Client::class, inversedBy="users")
-     * @Groups({"read_User_collection","read_User_item", "write_User_item" })
+     * @ORM\Column(type="string", length=180, unique=true)
      */
-    private $client;
+    #[
+        Groups(['read_User_item', 'write_User_item', 'read_token']),
+        Assert\NotBlank(
+            message: 'Email should not be blank.',
+            groups: ['write_User_item']
+        ),
+        Assert\Email(
+            message: 'Email is not valid.',
+            groups: ['write_User_item']
+        ),
+        Assert\Length(
+            max: 180,
+            maxMessage: 'Email is too long. It should have {{ limit }} characters or less.',
+            groups: ['write_User_item']
+        ),
+        ApiProperty(
+            attributes: [
+                'openapi_context' => [
+                    'example' => 'jean-luc.picard@starfleet.org',
+                ],
+            ]
+        )
+    ]
+    private $email;
 
     /**
      * @ORM\Column(type="json")
-     * @Groups({"read_Client_item", "read_User_collection", "read_User_item", "write_User_item" })
-     * @Assert\Choice(
-     *     choices=User::ROLES,
-     *     groups={"write_User_item"},
-     *     message="{{ value }} n'est pas un choix valide. En fonction de votre propre niveau d'acréditation, vous pouvez choisir : {{ choices }}."
-     * )
      */
+    #[
+        Groups(['read_Client_item', 'read_User_collection', 'read_User_item', 'write_User_item', 'read_token']),
+        Assert\Choice(
+            choices: User::ROLES,
+            groups: ['write_User_item'],
+            message: '{{ value }} is not a valid choice. According to your own role, Valid choices could be : {{ choices }}.'
+        ),
+        ApiProperty(
+            attributes: [
+                'openapi_context' => [
+                    'enum' => [['ROLE_USER'], ['ROLE_ADMIN'], ['ROLE_SUPER_ADMIN']],
+                    'example' => ['ROLE_USER'],
+                ],
+            ]
+        )
+    ]
     private $roles = [];
 
     /**
-     * @ORM\Column(type="string", length=20, nullable=true)
-     * @Groups({"read_User_item", "write_User_item" })
-     * @Assert\Length(
-     *     max = 20,
-     *     maxMessage = "Le numéro de téléphone doit faire maximum {{ limit }} caractères.",
-     *     groups={"write_User_item"}
-     * )
+     * @ORM\ManyToOne(targetEntity=Client::class, inversedBy="users")
      */
-    private $phoneNumber;
+    #[
+        Groups(['read_User_collection', 'read_User_item', 'write_User_item', 'read_token']),
+        ApiProperty(
+            attributes: [
+                'openapi_context' => [
+                    'example' => 'api/clients/2',
+                ],
+            ]
+        )
+    ]
+    private $client;
 
     /**
-     * @ORM\Column(type="string", length=180, unique=true)
-     * @Groups({"read_User_item", "write_User_item" })
-     * @Assert\NotBlank(
-     *     message = "Vous devez indiquer un email.",
-     *     groups={"create_User_item"}
-     * )
-     * @Assert\Email(message = "L'email indiqué n'est pas valide.",
-     *     groups={"write_User_item"}
-     * )
-     * @Assert\Length(
-     *     max = 180,
-     *     maxMessage = "L'email doit faire maximum {{ limit }} caractères.",
-     *     groups={"write_User_item"}
-     * )
+     * @ORM\Column(type="string", length=20, nullable=true)
      */
-    private $email;
+    #[
+        Groups(['read_User_item', 'write_User_item']),
+        Assert\Length(
+            max: 20,
+            maxMessage: 'Phone number is too long. It should have {{ limit }} characters or less.',
+            groups: ['write_User_item']
+        ),
+        ApiProperty(
+            attributes: [
+                'openapi_context' => [
+                    'example' => '06 54 89 35 52',
+                ],
+            ]
+        )
+    ]
+    private $phoneNumber;
 
     /**
      * @var string The hashed password
      * @ORM\Column(type="string")
-     * @Groups({"write_User_item" })
-     * @Assert\NotBlank(
-     *     message = "Vous devez indiquer un mot de passe.",
-     *     groups={"create_User_item"}
-     * )
      */
+    #[
+        Groups(['write_User_item']),
+        Assert\NotBlank(
+            message: 'Password should not be blank.',
+            groups: ['write_User_item']
+        ),
+        ApiProperty(
+            attributes: [
+                'openapi_context' => [
+                    'example' => 'apassword',
+                ],
+            ]
+        )
+    ]
     private $password;
 
     public function getId(): ?int
     {
         return $this->id;
+    }
+
+    public function setId(?int $id): self
+    {
+        $this->id = $id;
+
+        return $this;
     }
 
     public function getEmail(): ?string
@@ -218,7 +361,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @see PasswordAuthenticatedUserInterface
      */
-    public function getPassword(): string
+    public function getPassword(): ?string
     {
         return $this->password;
     }
@@ -291,5 +434,22 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->client = $client;
 
         return $this;
+    }
+
+    public static function createFromPayload($id, array $payload)
+    {
+        $user = new User();
+        $user->setId($id);
+        $user->setRoles($payload['roles']);
+        $user->setEmail($payload['userIdentifier']);
+        $client = null;
+        if (null !== $payload['clientId']) {
+            $client = new Client();
+            $client->setId($payload['clientId']);
+            $client->setCompanyName($payload['clientName']);
+        }
+        $user->setClient($client);
+
+        return $user;
     }
 }

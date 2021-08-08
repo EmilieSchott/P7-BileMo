@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\ProductRepository;
+use ApiPlatform\Core\Annotation\ApiProperty;
 use ApiPlatform\Core\Annotation\ApiResource;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -16,210 +17,329 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  *     message="Ce produit existe déjà.",
  *     groups={"write_Product_item"}
  * )
- * @ApiResource(
- *     collectionOperations={
- *         "get"={
- *             "normalization_context"={
- *                 "groups"={
- *                     "read_Product_collection",
- *                     "skip_null_values"=false
- *                 },
- *             },
- *         },
- *         "post"={
- *             "denormalization_context"={
- *                 "groups"={
- *                     "write_Product_item",
- *                 },
- *             },
- *             "validation_groups"={
- *                 "create_Product_item",
- *                 "write_Product_item",
- *             },
- *         },
- *     },
- *     itemOperations={
- *         "get"={
- *             "normalization_context"={
- *                 "groups"={
- *                     "read_Product_item",
- *                 },
- *                 "skip_null_values"=false
- *             },
- *         },
- *         "delete",
- *         "patch"={
- *             "denormalization_context"={
- *                 "groups"={
- *                     "write_Product_item",
- *                 },
- *             },
- *             "validation_groups"={
- *                 "write_Product_item",
- *             },
- *         },
- *     },
- *     paginationMaximumItemsPerPage=30,
- *     paginationClientItemsPerPage=true,
- * )
  */
+#[ApiResource(
+    collectionOperations: [
+        'get' => [
+            'normalization_context' => [
+                'groups' => [
+                    'read_Product_collection',
+                ],
+                'skip_null_values' => false,
+            ],
+            'security' => 'is_granted("ROLE_USER")',
+            'openapi_context' => [
+                'security' => [['bearerAuth' => []]],
+            ],
+        ],
+        'post' => [
+            'denormalization_context' => [
+                'groups' => [
+                    'write_Product_item',
+                ],
+            ],
+            'validation_groups' => [
+                'write_Product_item',
+            ],
+            'security' => 'is_granted("ROLE_SUPER_ADMIN")',
+            'openapi_context' => [
+                'security' => [['bearerAuth' => []]],
+            ],
+        ],
+    ],
+    itemOperations: [
+        'get' => [
+            'normalization_context' => [
+                'groups' => [
+                    'read_Product_item',
+                ],
+                'skip_null_values' => false,
+            ],
+            'security' => 'is_granted("ROLE_USER")',
+            'openapi_context' => [
+                'security' => [['bearerAuth' => []]],
+            ],
+        ],
+        'delete' => [
+            'security' => 'is_granted("ROLE_SUPER_ADMIN")',
+            'openapi_context' => [
+                'security' => [['bearerAuth' => []]],
+            ],
+        ],
+        'patch' => [
+            'denormalization_context' => [
+                'groups' => [
+                    'write_Product_item',
+                ],
+            ],
+            'validation_groups' => [
+                'write_Product_item',
+            ],
+            'security' => 'is_granted("ROLE_SUPER_ADMIN")',
+            'openapi_context' => [
+                'security' => [['bearerAuth' => []]],
+            ],
+        ],
+    ],
+    paginationMaximumItemsPerPage: 30,
+    paginationClientItemsPerPage: true,
+)]
 class Product
 {
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
-     * @Groups({"read_Product_collection"})
      */
+    #[Groups(['read_Product_collection'])]
     private $id;
 
     /**
      * @ORM\Column(type="string", length=150)
-     * @Groups({"read_Product_collection", "read_Product_item", "write_Product_item"})
-     * @Assert\NotBlank(
-     *     message = "Vous devez indiquer le nom du produit.",
-     *     groups={"create_Product_item"}
-     * )
-     * @Assert\Length(
-     *     max = 150,
-     *     maxMessage = "Le nom du produit doit faire maximum {{ limit }} caractères.",
-     *     groups={"write_Product_item"}
-     * )
      */
+    #[
+        Groups(['read_Product_collection', 'read_Product_item', 'write_Product_item']),
+        Assert\NotBlank(
+            message: 'Product name should not be blank.',
+            groups: ['write_Product_item']
+        ),
+        Assert\Length(
+            max: 150,
+            maxMessage: 'Product name is too long. It should have {{ limit }} characters or less.',
+            groups: ['write_Product_item']
+        ),
+        ApiProperty(
+            attributes: [
+                'openapi_context' => [
+                    'example' => 'Product name',
+                ],
+            ]
+        )
+    ]
     private $name;
 
     /**
      * @ORM\Column(type="string", length=150, unique=true)
-     * @Groups({"read_Product_collection"})
      */
+    #[Groups(['read_Product_collection'])]
     private $slug;
 
     /**
      * @ORM\Column(type="string", length=45)
-     * @Groups({"read_Product_collection", "read_Product_item", "write_Product_item"})
-     * @Assert\NotBlank(
-     *     message = "Vous devez indiquer la marque du produit.",
-     *     groups={"create_Product_item"}
-     * )
-     * @Assert\Length(
-     *     max = 45,
-     *     maxMessage = "La marque du produit doit faire maximum {{ limit }} caractères.",
-     *     groups={"write_Product_item"}
-     * )
      */
+    #[
+        Groups(['read_Product_collection', 'read_Product_item', 'write_Product_item']),
+        Assert\NotBlank(
+            message: 'Product brand should not be blank.',
+            groups: ['write_Product_item']
+        ),
+        Assert\Length(
+            max: 45,
+            maxMessage: 'Product brand is too long. It should have {{ limit }} characters or less.',
+            groups: ['write_Product_item']
+        ),
+        ApiProperty(
+            attributes: [
+                'openapi_context' => [
+                    'example' => 'Samsung',
+                ],
+            ]
+        )
+    ]
     private $brand;
 
     /**
      * @ORM\Column(type="string", length=15)
-     * @Groups({"read_Product_collection", "read_Product_item", "write_Product_item"})
-     * @Assert\NotBlank(
-     *     message = "Vous devez indiquer le prix du produit.",
-     *     groups={"create_Product_item"}
-     * )
-     * @Assert\Length(
-     *     max = 15,
-     *     maxMessage = "Le prix du produit doit faire maximum {{ limit }} caractères. (Indiquez la devise)",
-     *     groups={"write_Product_item"}
-     * )
      */
+    #[
+        Groups(['read_Product_collection', 'read_Product_item', 'write_Product_item']),
+        Assert\NotBlank(
+            message: 'Product price should not be blank.',
+            groups: ['write_Product_item']
+        ),
+        Assert\Length(
+            max: 15,
+            maxMessage: 'Product price is too long. It should have {{ limit }} characters or less. (you should indicate currency)',
+            groups: ['write_Product_item']
+        ),
+        ApiProperty(
+            attributes: [
+                'openapi_context' => [
+                    'example' => '230€',
+                ],
+            ]
+        )
+    ]
     private $price;
 
     /**
      * @ORM\Column(type="integer")
-     * @Groups({"read_Product_collection", "read_Product_item", "write_Product_item"})
-     * @Assert\NotBlank(
-     *     message = "Vous devez indiquer un stock pour le produit.",
-     *     groups={"create_Product_item"}
-     * )
-     * @Assert\Length(
-     *     max = 11,
-     *     maxMessage = "Ls stock du produit doit faire maximum {{ limit }} chiffres.",
-     *     groups={"write_Product_item"}
-     * )
      */
+    #[
+        Groups(['read_Product_collection', 'read_Product_item', 'write_Product_item']),
+        Assert\NotBlank(
+            message : 'Product stock should not be blank.',
+            groups: ['write_Product_item']
+        ),
+        Assert\Length(
+            max: 11,
+            maxMessage: 'Product stock is too long. It should have {{ limit }} characters or less.',
+            groups: ['write_Product_item']
+        ),
+        ApiProperty(
+            attributes: [
+                'openapi_context' => [
+                    'example' => '75',
+                ],
+            ]
+        )
+    ]
     private $stock;
 
     /**
      * @ORM\Column(type="text")
-     * @Groups({"read_Product_item", "write_Product_item"})
-     * @Assert\NotBlank(
-     *     message = "Vous devez indiquer une description pour le produit.",
-     *     groups={"create_Product_item"}
-     * )
      */
+    #[
+        Groups(['read_Product_item', 'write_Product_item']),
+        Assert\NotBlank(
+            message: 'Product description should not be blank.',
+            groups: ['write_Product_item']
+        ),
+        ApiProperty(
+            attributes: [
+                'openapi_context' => [
+                    'example' => 'Product description',
+                ],
+            ]
+        )
+
+    ]
     private $description;
 
     /**
      * @ORM\Column(type="text")
-     * @Groups({"read_Product_collection", "read_Product_item", "write_Product_item"})
-     * @Assert\NotBlank(
-     *     message = "Vous devez indiquer une URL pour récupérer l'image du produit.",
-     *     groups={"create_Product_item"}
-     * )
-     * @Assert\Url(
-     *     message = "L'Url spécifié n'est pas valide.",
-     *     groups={"write_Product_item"}
-     * )
      */
+    #[
+        Groups(['read_Product_collection', 'read_Product_item', 'write_Product_item']),
+        Assert\NotBlank(
+            message: 'Product image should not be blank.',
+            groups: ['write_Product_item']
+        ),
+        Assert\Url(
+            message: 'Url is not valid.',
+            groups: ['write_Product_item']
+        ),
+        ApiProperty(
+            attributes: [
+                'openapi_context' => [
+                    'example' => 'https://link-to-image.com',
+                ],
+            ]
+        )
+    ]
     private $imageUrl;
 
     /**
      * @ORM\Column(type="string", length=45)
-     * @Groups({"read_Product_item", "write_Product_item"})
-     * @Assert\NotBlank(
-     *     message = "Vous devez indiquer le système d'exploitation du produit.",
-     *     groups={"create_Product_item"}
-     * )
-     * @Assert\Length(
-     *     max = 45,
-     *     maxMessage = "Le système d'exploitation du produit doit faire maximum {{ limit }} caractères.",
-     *     groups={"write_Product_item"}
-     * )
      */
+    #[
+        Groups(['read_Product_item', 'write_Product_item']),
+        Assert\NotBlank(
+            message: 'Product operating system should not be blank.',
+            groups: ['write_Product_item']
+        ),
+        Assert\Length(
+            max: 45,
+            maxMessage: 'Product operating system is too long. It should have {{ limit }} characters or less.',
+            groups: ['write_Product_item']
+        ),
+        ApiProperty(
+            attributes: [
+                'openapi_context' => [
+                    'example' => 'Android',
+                ],
+            ]
+        )
+    ]
     private $operatingSystem;
 
     /**
      * @ORM\Column(type="string", length=15, nullable=true)
-     * @Groups({"read_Product_item", "write_Product_item"})
-     * @Assert\Length(
-     *     max = 15,
-     *     maxMessage = "La capacité de la mémoire du produit doit faire maximum {{ limit }} caractères. (Indiquez l'unité)",
-     *     groups={"write_Product_item"}
-     * )
      */
+    #[Groups(['read_Product_item', 'write_Product_item']),
+    Assert\Length(
+        max: 15,
+        maxMessage: 'Memory capacity is too long. It should have {{ limit }} characters or less.',
+        groups: ['write_Product_item']
+    ),
+    ApiProperty(
+        attributes: [
+            'openapi_context' => [
+                'example' => '16Go',
+            ],
+        ]
+    )
+    ]
     private $stockageCapacity;
 
     /**
      * @ORM\Column(type="string", length=15, nullable=true)
-     * @Groups({"read_Product_item", "write_Product_item"})
-     * @Assert\Length(
-     *     max = 15,
-     *     maxMessage = "La taille de l'écran du produit doit faire maximum {{ limit }} caractères. (Indiquez l'unité)",
-     *     groups={"write_Product_item"}
-     * )
      */
+    #[
+        Groups(['read_Product_item', 'write_Product_item']),
+        Assert\Length(
+            max: 15,
+            maxMessage: 'Screen size is too long. It should have {{ limit }} characters or less. (You should indicate unit)',
+            groups: ['write_Product_item']
+        ),
+        ApiProperty(
+            attributes: [
+                'openapi_context' => [
+                    'example' => '16 pouces',
+                ],
+            ]
+        )
+    ]
     private $screenSize;
 
     /**
      * @ORM\Column(type="string", length=15, nullable=true)
-     * @Groups({"read_Product_item", "write_Product_item"})
-     * @Assert\Length(
-     *     max = 15,
-     *     maxMessage = "La résolution des photos prises par le produit doit faire maximum {{ limit }} caractères. (Indiquez l'unité)",
-     *     groups={"write_Product_item"}
-     * )
      */
+    #[
+        Groups(['read_Product_item', 'write_Product_item']),
+        Assert\Length(
+            max: 15,
+            maxMessage: 'Photo resolution is too long. It should have {{ limit }} characters or less. (You should indicate unit)',
+            groups: ['write_Product_item']
+        ),
+        ApiProperty(
+            attributes: [
+                'openapi_context' => [
+                    'example' => '125Mpx',
+                ],
+            ]
+        )
+    ]
     private $photoResolution;
 
     /**
      * @ORM\Column(type="string", length=15, nullable=true)
-     * @Groups({"read_Product_item", "write_Product_item"})
-     * @Assert\Length(
-     *     max = 15,
-     *     maxMessage = "Le poids du produit doit faire maximum {{ limit }} caractères. (Indiquez l'unité)",
-     *     groups={"write_Product_item"}
-     * )
      */
+    #[
+        Groups(['read_Product_item', 'write_Product_item']),
+        Assert\Length(
+            max: 15,
+            maxMessage: 'Weight is too long. It should have {{ limit }} characters or less. (You should indicate unit)',
+            groups: ['write_Product_item']
+        ),
+        ApiProperty(
+            attributes: [
+                'openapi_context' => [
+                    'example' => '230g',
+                ],
+            ]
+        )
+    ]
     private $weight;
 
     public function getId(): ?int

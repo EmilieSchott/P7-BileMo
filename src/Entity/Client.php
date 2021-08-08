@@ -5,6 +5,7 @@ namespace App\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\ClientRepository;
 use Doctrine\Common\Collections\Collection;
+use ApiPlatform\Core\Annotation\ApiProperty;
 use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Serializer\Annotation\Groups;
@@ -18,123 +19,180 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  *     message="Ce client existe déjà.",
  *     groups={"write_Client_item"}
  * )
- * @ApiResource(
- *     collectionOperations={
- *         "get"={
- *             "normalization_context"={
- *                 "groups"={
- *                     "read_Client_collection",
- *                 },
- *                 "skip_null_values"=false
- *             },
- *         },
- *         "post"={
- *             "denormalization_context"={
- *                 "groups"={
- *                     "write_Client_item",
- *                 },
- *             },
- *             "validation_groups"={
- *                 "create_Client_item",
- *                 "write_Client_item",
- *             },
- *         },
- *     },
- *     itemOperations={
- *         "get"={
- *             "normalization_context"={
- *                 "groups"={
- *                     "read_Client_item",
- *                 },
- *                 "skip_null_values"=false
- *             },
- *         },
- *         "delete",
- *         "patch"={
- *             "denormalization_context"={
- *                 "groups"={
- *                     "write_Client_item",
- *                 },
- *             },
- *             "validation_groups"={
- *                 "write_Client_item",
- *             },
- *         },
- *     },
- *     paginationMaximumItemsPerPage=30,
- *     paginationClientItemsPerPage=true,
- * )
  */
+#[ApiResource(
+    collectionOperations: [
+        'get' => [
+            'normalization_context' => [
+                'groups' => [
+                    'read_Client_collection',
+                ],
+                'skip_null_values' => false,
+            ],
+            'security' => 'is_granted("ROLE_SUPER_ADMIN")',
+            'openapi_context' => [
+                'security' => [['bearerAuth' => []]],
+            ],
+        ],
+        'post' => [
+            'denormalization_context' => [
+                'groups' => [
+                    'write_Client_item',
+                ],
+            ],
+            'validation_groups' => [
+                'write_Client_item',
+            ],
+            'security' => 'is_granted("ROLE_SUPER_ADMIN")',
+            'openapi_context' => [
+                'security' => [['bearerAuth' => []]],
+            ],
+        ],
+    ],
+    itemOperations: [
+        'get' => [
+            'normalization_context' => [
+                'groups' => [
+                    'read_Client_item',
+                ],
+                'skip_null_values' => false,
+            ],
+            'security' => 'is_granted("ROLE_SUPER_ADMIN")',
+            'openapi_context' => [
+                'security' => [['bearerAuth' => []]],
+            ],
+        ],
+        'delete' => [
+            'security' => 'is_granted("ROLE_SUPER_ADMIN")',
+            'openapi_context' => [
+                'security' => [['bearerAuth' => []]],
+            ],
+        ],
+        'patch' => [
+            'denormalization_context' => [
+                'groups' => [
+                    'write_Client_item',
+                ],
+            ],
+            'validation_groups' => [
+                'write_Client_item',
+            ],
+            'security' => 'is_granted("ROLE_SUPER_ADMIN")',
+            'openapi_context' => [
+                'security' => [['bearerAuth' => []]],
+            ],
+        ],
+    ],
+    paginationMaximumItemsPerPage: 30,
+    paginationClientItemsPerPage: true,
+)]
 class Client
 {
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
-     * @Groups({"read_Client_collection", "read_User_collection", "read_User_item" })
      */
+    #[Groups(['read_Client_collection', 'read_User_collection', 'read_User_item', 'read_token'])]
     private $id;
 
     /**
      * @ORM\Column(type="string", length=75)
-     * @Groups({"read_Client_collection", "read_Client_item", "read_User_collection", "read_User_item", "write_Client_item" })
-     * @Assert\NotBlank(
-     *     message = "Vous devez indiquer le nom de l'entreprise.",
-     *     groups={"create_Client_item"}
-     * )
-     * @Assert\Length(
-     *     max = 75,
-     *     maxMessage = "Le nom de l'entreprise doit faire maximum {{ limit }} caractères.",
-     *     groups={"write_Client_item"}
-     * )
      */
+    #[
+        Groups(['read_Client_collection', 'read_Client_item', 'read_User_collection', 'read_User_item', 'write_Client_item', 'read_token']),
+        Assert\NotBlank(
+            message: 'Company name should not be blank.',
+            groups: ['write_Client_item']
+        ),
+        Assert\Length(
+            max: 75,
+            maxMessage: 'Company name is too long. It should have {{ limit }} characters or less. (You should indicate unit)',
+            groups: ['write_Client_item']
+        ),
+        ApiProperty(
+            attributes: [
+                'openapi_context' => [
+                    'example' => 'Your company name',
+                ],
+            ]
+        )
+    ]
     private $companyName;
 
     /**
      * @ORM\Column(type="string", length=20, nullable=true)
-     * @Groups({"read_Client_item", "write_Client_item" })
-     * @Assert\Length(
-     *     max = 20,
-     *     maxMessage = "Le numéro de téléphone de l'entreprise doit faire maximum {{ limit }} caractères.",
-     *     groups={"write_Client_item"}
-     * )
      */
+    #[Groups(
+        ['read_Client_item', 'write_Client_item']
+    ),
+        Assert\Length(
+            max: 20,
+            maxMessage: 'Phone number is too long. It should have {{ limit }} characters or less. (You should indicate unit)',
+            groups: ['write_Client_item']
+        ),
+        ApiProperty(
+            attributes: [
+                'openapi_context' => [
+                    'example' => '02 54 87 62 36',
+                ],
+            ]
+        )
+    ]
     private $phoneNumber;
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups({"read_Client_item", "read_Client_collection", "write_Client_item" })
-     * @Assert\NotBlank(
-     *     message = "Vous devez indiquer une adresse pour l'entreprise.",
-     *     groups={"create_Client_item"}
-     * )
-     * @Assert\Length(
-     *     max = 255,
-     *     maxMessage = "L'adresse de l'entreprise doit faire maximum {{ limit }} caractères.",
-     *     groups={"write_Client_item"}
-     * )
      */
+    #[
+        Groups(['read_Client_item', 'read_Client_collection', 'write_Client_item']),
+        Assert\NotBlank(
+            message: 'Company address should not be blank.',
+            groups: ['write_Client_item']
+        ),
+        Assert\Length(
+            max: 255,
+            maxMessage: 'Company address is too long. It should have {{ limit }} characters or less. (You should indicate unit)',
+            groups: ['write_Client_item']
+        ),
+        ApiProperty(
+            attributes: [
+                'openapi_context' => [
+                    'example' => '11 rue de la rivière 75013 Paris',
+                ],
+            ]
+        )
+    ]
     private $address;
 
     /**
      * @ORM\Column(type="string", length=45)
-     * @Groups({"read_Client_item", "write_Client_item" })
-     * @Assert\NotBlank(
-     *     message = "Vous devez indiquer le numéro SIRET de l'entreprise.",
-     *     groups={"create_Client_item"}
-     * )
-     * @Assert\Length(
-     *     max = 45,
-     *     maxMessage = "Le numéro SIRET de l'entreprise doit faire maximum {{ limit }} caractères.",
-     *     groups={"write_Client_item"}
-     * )
      */
+    #[
+        Groups(['read_Client_item', 'write_Client_item']),
+        Assert\NotBlank(
+            message: 'Company SIRET number should not be blank.',
+            groups: ['write_Client_item']
+        ),
+        Assert\Length(
+            max: 45,
+            maxMessage: 'Company SIRET number is too long. It should have {{ limit }} characters or less. (You should indicate unit)',
+            groups: ['write_Client_item']
+        ),
+        ApiProperty(
+            attributes: [
+                'openapi_context' => [
+                    'example' => 'Your SIRET number',
+                ],
+            ]
+        )
+    ]
     private $SiretNumber;
 
     /**
      * @ORM\OneToMany(targetEntity=User::class, mappedBy="client")
-     * @Groups({"read_Client_item"})
      */
+    #[Groups(['read_Client_item'])]
     private $users;
 
     public function __construct()
@@ -145,6 +203,13 @@ class Client
     public function getId(): ?int
     {
         return $this->id;
+    }
+
+    public function setId(?int $id): self
+    {
+        $this->id = $id;
+
+        return $this;
     }
 
     public function getCompanyName(): ?string
