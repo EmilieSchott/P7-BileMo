@@ -1,5 +1,7 @@
 # An API to access BileMo products catalog
 
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/0fcb99db91514c20b9108a670714781d)](https://app.codacy.com/gh/EmilieSchott/P7-BileMo?utm_source=github.com&utm_medium=referral&utm_content=EmilieSchott/P7-BileMo&utm_campaign=Badge_Grade_Settings)
+
 ## Installation
 
 ---
